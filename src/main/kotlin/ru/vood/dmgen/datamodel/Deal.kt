@@ -5,7 +5,6 @@ import ru.vood.dmgen.annotation.Pk
 
 @FlowEntity
 data class Deal(
-
     @Pk
     val id: String
 )
