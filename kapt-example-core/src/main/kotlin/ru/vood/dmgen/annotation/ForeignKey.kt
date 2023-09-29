@@ -7,6 +7,6 @@ import kotlin.reflect.KClass
 @Repeatable
 annotation class ForeignKey(
     val kClass: KClass<*>,
-    val currentTypeCols: Array<kotlin.String>,
-    val outTypeCols: Array<kotlin.String>,
-    )
+    val currentTypeCols: Array<String>,
+    val outTypeCols: Array<String>,
+)
