@@ -1,5 +1,10 @@
 package ru.vood.dmgen.annotation
 
-@Target(AnnotationTarget.FIELD, AnnotationTarget.FIELD)
+import kotlin.reflect.KClass
+
+@Target(AnnotationTarget.FIELD, AnnotationTarget.FIELD, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ForeignKey
+@Repeatable
+annotation class ForeignKey(
+    val kClass: KClass<*>
+)
