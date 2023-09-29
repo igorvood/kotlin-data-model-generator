@@ -5,17 +5,25 @@ import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Pk
 
 @FlowEntity
-@ForeignKey(Deal::class)
-@ForeignKey(Product::class)
+@ForeignKey(
+    kClass = Deal::class,
+    currentTypeCols = ["dealId"],
+    outTypeCols = ["id"]
+)
+@ForeignKey(
+    Product::class,
+    currentTypeCols = ["dealId", "productId"],
+    outTypeCols = ["dealId", "id"]
+)
 data class ProductPayments(
     @Pk
     val productId: String,
     @Pk
-    val dealId: String,
+    val dealId: Int,
 
     @Pk
     val id: String,
 
-    val summa: Int
+    val summa: Long
 
 )

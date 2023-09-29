@@ -6,5 +6,7 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 @Repeatable
 annotation class ForeignKey(
-    val kClass: KClass<*>
-)
+    val kClass: KClass<*>,
+    val currentTypeCols: Array<kotlin.String>,
+    val outTypeCols: Array<kotlin.String>,
+    )
