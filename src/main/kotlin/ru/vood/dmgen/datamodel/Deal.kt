@@ -6,5 +6,7 @@ import ru.vood.dmgen.annotation.Pk
 @FlowEntity
 data class Deal(
     @Pk
-    val id: Int
+    val id: Int,
+
+    val params: Set<DialParams>
 )
