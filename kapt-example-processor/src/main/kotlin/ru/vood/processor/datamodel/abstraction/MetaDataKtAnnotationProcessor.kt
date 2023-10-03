@@ -12,7 +12,7 @@ import javax.tools.Diagnostic
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
 @SupportedAnnotationTypes("ru.vood.dmgen.annotation.FlowEntity")
-class SampleAnnotationProcessor : AbstractProcessor() {
+class MetaDataKtAnnotationProcessor : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         roundEnv.getElementsAnnotatedWith(FlowEntity::class.java).forEach {
             processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, "${it.simpleName} is processed.")
