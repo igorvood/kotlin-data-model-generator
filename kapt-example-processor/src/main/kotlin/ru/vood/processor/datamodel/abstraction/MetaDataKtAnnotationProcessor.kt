@@ -1,7 +1,8 @@
-package kaptexample.processor
+package ru.vood.processor.datamodel.abstraction
 
 import com.google.auto.service.AutoService
 import kaptexample.annotation.SampleAnnotation
+import ru.vood.dmgen.annotation.FlowEntity
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -10,11 +11,12 @@ import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_11)
-@SupportedAnnotationTypes("kaptexample.annotation.SampleAnnotation")
+@SupportedAnnotationTypes("ru.vood.dmgen.annotation.FlowEntity")
 class SampleAnnotationProcessor : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
-        roundEnv.getElementsAnnotatedWith(SampleAnnotation::class.java).forEach {
+        roundEnv.getElementsAnnotatedWith(FlowEntity::class.java).forEach {
             processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, "${it.simpleName} is processed.")
+
         }
         return true
     }

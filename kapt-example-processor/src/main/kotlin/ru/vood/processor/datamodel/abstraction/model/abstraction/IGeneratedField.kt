@@ -7,12 +7,12 @@ import javax.lang.model.element.Element
 interface IGeneratedField {
 
     val element: Element
-    fun name(): String
+    fun name(): String = element.simpleName.toString()
 
     fun isNullable(): Boolean
-    fun type(): String
-    fun betterClass(): AbstractAnnotatedClass?
-    fun isUpdateble(): Boolean
+    fun type(): String = element.asType().toString()
+//    fun betterClass(): AbstractAnnotatedClass?
+//    fun isUpdateble(): Boolean
 }
 
 inline fun <reified ANNO : Annotation> IGeneratedField.annotation(): Optional<ANNO> =

@@ -2,19 +2,27 @@ package ru.vood.processor.datamodel.abstraction.model.abstraction
 
 import javax.lang.model.element.Element
 
-abstract class AbstractAnnotatedClass(val element: Element)/*<Annotation>*/ {
-    abstract fun name(): String
+abstract class AbstractAnnotatedClass<FIELD_META : IGeneratedField>(
+    private val element: Element
+)/*<Annotation>*/ {
+    val name: String by lazy { element.asType().toString() }
 
-    abstract fun fields(): List<IGeneratedField>
+    abstract fun elementToIGeneratedField(e: Element): FIELD_META
 
-    fun shortName(): String {
-        val dotIdx = name().lastIndexOf('.')
-        return name().substring(dotIdx + 1)
+    val fields: List<FIELD_META> by lazy {
+        element.enclosedElements
+            .filter { e: Element -> e.kind.isField }
+            .map { element: Element -> elementToIGeneratedField(element) }
     }
 
-    fun packageName(): String {
-        val dotIdx = name().lastIndexOf('.')
-        return name().substring(0, dotIdx)
+    val shortName: String by lazy {
+        val dotIdx = name.lastIndexOf('.')
+        name.substring(dotIdx + 1)
+    }
+
+    val packageName: String by lazy {
+        val dotIdx = name.lastIndexOf('.')
+        name.substring(0, dotIdx)
     }
 //    inline fun <reified A: Annotation> annotatedBy()  : List<OrIsNullField> = fields().filter { f -> f.annotation<A>().isPresent }
 
