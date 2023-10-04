@@ -1,18 +1,11 @@
 package ru.vood.processor.datamodel.abstraction.model.abstraction
 
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
 import javax.lang.model.element.Element
 
-abstract class AbstractAnnotatedClass<FIELD_META : IGeneratedField>(
+abstract class AbstractKotlinAnnotatedClass<FIELD_META : IGeneratedField>(
     private val element: Element
 )/*<Annotation>*/ {
-
-    val kotlinMetaClass = when (val t = element.asType().asTypeName()) {
-        is ClassName -> t
-        else -> error("unsupported class $t")
-    }
-
     val name: String by lazy { element.asType().toString() }
 
     abstract fun elementToIGeneratedField(e: Element): FIELD_META

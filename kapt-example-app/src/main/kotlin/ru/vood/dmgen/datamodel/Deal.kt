@@ -8,5 +8,6 @@ data class Deal(
     @Pk
     val id: Int,
 
-    val params: Set<DialParams>
+    val paramsSet: Set<DialParams>,
+    val paramsList: List<DialParams>
 )

@@ -8,9 +8,9 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
-@AutoService(Processor::class)
-@SupportedSourceVersion(SourceVersion.RELEASE_11)
-@SupportedAnnotationTypes("kaptexample.annotation.SampleAnnotation")
+//@AutoService(Processor::class)
+//@SupportedSourceVersion(SourceVersion.RELEASE_11)
+//@SupportedAnnotationTypes("kaptexample.annotation.SampleAnnotation")
 class SampleAnnotationProcessor : AbstractProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
         roundEnv.getElementsAnnotatedWith(SampleAnnotation::class.java).forEach {
