@@ -13,9 +13,9 @@ class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(el
     override fun elementToIGeneratedField(e: Element): MetaEntityColumn =
         MetaEntityColumn(e)
 
-    val flowEntity by lazy { element.annotation<FlowEntity>() }
+    val flowEntity = element.annotation<FlowEntity>()
 
-    val foreignKeys by lazy { element.annotations<ForeignKey>() }
+    val foreignKeys = element.annotations<ForeignKey>()
 
-    val uniqueKeys by lazy { element.annotations<Uk>() }
+    val uniqueKeys = element.annotations<Uk>()
 }
