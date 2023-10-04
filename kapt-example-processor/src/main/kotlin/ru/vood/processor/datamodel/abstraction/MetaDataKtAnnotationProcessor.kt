@@ -1,15 +1,13 @@
 package ru.vood.processor.datamodel.abstraction
 
 import com.google.auto.service.AutoService
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
+import ru.vood.processor.datamodel.abstraction.model.MetaEntityColumn
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
 import ru.vood.processor.datamodel.abstraction.model.ModelClassName
-import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
-import ru.vood.processor.datamodel.abstraction.model.abstraction.proxyAnnotationValue
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -28,11 +26,18 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
         val allMeta: Map<Element, MetaEntity> = collectMetaEntity(elementsAnnotatedWithFlowEntity)
 
 
-        val entities = allMeta.map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
+        val entities: Map<ModelClassName, MetaEntity> =
+            allMeta.map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
 
         val elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(ForeignKey::class.java)
 
-        collectMetaForeignKey(elementsAnnotatedWith, entities)
+
+        val fks = entities.map { it.value }
+            .flatMap { qw ->
+                qw.foreignKeysAnnotations.map { fk -> fk to ModelClassName(qw.kotlinMetaClass.toString()) }
+            }
+
+        collectMetaForeignKey(fks, entities)
 
 
         roundEnv.getElementsAnnotatedWith(FlowEntity::class.java).forEach { classElement ->
@@ -44,6 +49,8 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                     Diagnostic.Kind.WARNING,
                     "${classElement.simpleName} ${classElement.isKotlinElement()} is processed."
                 )
+
+
                 metaEntity.uniqueKeysFields
                     .forEach { colMap ->
                         processingEnv.messager.printMessage(
@@ -70,41 +77,73 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
     }
 
     private fun collectMetaForeignKey(
-        elementsAnnotatedWith: Set<Element>,
+        elementsAnnotatedWith: List<Pair<ForeignKey, ModelClassName>>,
         entities: Map<ModelClassName, MetaEntity>,
-        collector: Map<ClassName, Set<MetaForeignKey>> = mapOf()
+        collector: Set<MetaForeignKey> = setOf()
     ) {
 
         val map = when (elementsAnnotatedWith.isEmpty()) {
             true -> collector
             false -> {
                 val head = elementsAnnotatedWith.first()
-                val tailElementsAnnotatedWith = elementsAnnotatedWith.drop(1).toSet()
-                val annotations = head.annotations<ForeignKey>()
+                val foreignKey = head.first
+                val currentClass = head.second
+                val foreignClass = ModelClassName(foreignKey.kClass)
+                val fromCols = metaEntityColumns(entities, currentClass, foreignKey.currentTypeCols)
 
-                val map = annotations
-                    .map {
-                        val annotationValue = head.proxyAnnotationValue<ForeignKey, Any>(processingEnv, "kClass")
-                        val orElseThrow = annotationValue.orElseThrow()
-                        val orElseThrow1 = orElseThrow.toString()
-                        val toClassName = head.asType().asTypeName() as ClassName
-                        val canonicalName = toClassName.canonicalName
-//                        val qualifiedName = it.kClass.qualifiedName
-                        val metaForeignKey = MetaForeignKey(
-//                            toClassName
-                        )
+                val toCols = metaEntityColumns(
+                    entities = entities,
+                    entity = foreignClass,
+                    cols = foreignKey.outTypeCols
+                )
 
+                if (fromCols.size != toCols.size) {
+                    error("Не совпадают по кол-ву списки колонок currentTypeCols и outTypeCols во внешнем ключе $foreignKey")
+                }
 
-                        toClassName to metaForeignKey
+                val map = fromCols.indices
+                    .forEach { idx ->
+                        val fromMetaEntityColumn = fromCols[idx]
+                        val toMetaEntityColumn = toCols[idx]
+                        if (fromMetaEntityColumn.type != toMetaEntityColumn.type) {
+                            error("Для внешнего ключа $foreignKey не совпадают типы колонок  в текущей(${fromMetaEntityColumn.name}, ${fromMetaEntityColumn.type}) и внешней(${toMetaEntityColumn.name}, ${toMetaEntityColumn.type}) таблице")
+                        }
                     }
 
+                val foreignMetaEntity = entities[foreignClass]!!
+                val uks = foreignMetaEntity.uniqueKeysFields
+                    .filter { uksEntry ->
 
-                collector
+                        val ukCols = uksEntry.value.map { it.name }
+                        val fkCols = toCols.map { it.name }
+                        val b = ukCols.minus(fkCols).isEmpty() && fkCols.minus(ukCols).isEmpty()
+                        b
+                    }
+                if (uks.size != 1) {
+                    error("Для внешнего ключа $foreignKey во внешней таблице не найден уникальный ключ")
+                }
+                val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity)
+                val plus = collector.plus(element)
+                plus
             }
         }
 
 
 //        TODO("Not yet implemented")
+    }
+
+    private fun metaEntityColumns(
+        entities: Map<ModelClassName, MetaEntity>,
+        entity: ModelClassName,
+        cols: Array<String>
+    ): List<MetaEntityColumn> {
+        val fromMetaEntity =
+            entities[entity] ?: error("Не найдена сущность в контексте ${entity.value}")
+        val fromCols = cols.map { fkField ->
+            fromMetaEntity.fields.filter { field -> field.name == fkField }.firstOrNull()
+                ?: error("Не найдено поле ${fkField}  внешнего ключа для сущности  ${entity.value}")
+        }
+        return fromCols
     }
 
     private fun collectMetaEntity(

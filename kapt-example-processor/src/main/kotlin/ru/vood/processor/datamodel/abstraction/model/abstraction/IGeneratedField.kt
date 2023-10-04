@@ -57,30 +57,3 @@ inline fun <reified ANNO : Annotation> IGeneratedField.annotation(): Optional<AN
     element.annotation()
 
 
-inline fun <reified ANNO : Annotation> Element.annotation(): Optional<ANNO> {
-    val annotation = this.getAnnotation(ANNO::class.java)
-    return Optional.ofNullable(annotation)
-}
-inline fun <reified ANNO : Annotation> Element.necessaryAnnotation(): ANNO = annotation<ANNO>().orElseGet { error("Y $this не найдена обязательная аннотация ${ANNO::class.java.canonicalName}") }
-
-
-inline fun <reified ANNO : Annotation> Element.annotations(): Array<ANNO> {
-    return this.getAnnotationsByType(ANNO::class.java)
-}
-
-
-inline fun <reified ANNO : Annotation> Element.annotationValue(
-    processingEnv: ProcessingEnvironment,
-    valueName: String
-): Any {
-    val actionType = processingEnv.getElementUtils().getTypeElement(ANNO::class.java.name).asType()
-    val filter = this.annotationMirrors
-        .filter { it.annotationType.equals(actionType) }
-        .flatMap { it.elementValues.entries }
-    return filter
-        .filter { it.key.simpleName.toString() == valueName }
-        .map { it.value.value }
-        .first()
-
-
-}

@@ -6,12 +6,14 @@ import ru.vood.dmgen.annotation.Pk
 
 @FlowEntity
 @ForeignKey(
-    kClass = Deal::class,
+//    kClass = Deal::class,
+    kClass = "ru.vood.dmgen.datamodel.Deal",
     currentTypeCols = ["dealId"],
     outTypeCols = ["id"]
 )
 @ForeignKey(
-    Product::class,
+//    Product::class,
+    kClass = "ru.vood.dmgen.datamodel.Product",
     currentTypeCols = ["dealId", "productId"],
     outTypeCols = ["dealId", "id"]
 )

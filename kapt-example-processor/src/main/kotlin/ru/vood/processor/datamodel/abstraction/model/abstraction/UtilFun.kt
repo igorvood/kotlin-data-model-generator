@@ -1,23 +1,25 @@
 package ru.vood.processor.datamodel.abstraction.model.abstraction
 
 import java.util.*
-import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 
-inline fun <reified ANNO : Annotation, reified TYPE_VAL> Element.proxyAnnotationValue(
-    processingEnv: ProcessingEnvironment,
-    valueName: String
-): Optional<TYPE_VAL> {
-    val map = this.annotation<ANNO>()
-        .map { idAnnoTat ->
-            val annotationValue = this.annotationValue<ANNO>(processingEnv, valueName)
-            return@map annotationValue as TYPE_VAL
-        }
-    return map
+inline fun <reified ANNO : Annotation> Element.annotation(): Optional<ANNO> {
+    val annotation = this.getAnnotation(ANNO::class.java)
+    return Optional.ofNullable(annotation)
 }
+inline fun <reified ANNO : Annotation> Element.necessaryAnnotation(): ANNO =
+    annotation<ANNO>().orElseGet { error("Y $this не найдена обязательная аннотация ${ANNO::class.java.canonicalName}") }
+
+
+inline fun <reified ANNO : Annotation> Element.annotations(): Array<ANNO> {
+    return this.getAnnotationsByType(ANNO::class.java)
+}
+
+
+// нужны ли ф-ции ниже не ясно
 
 fun String.mapKotlinType(): String =
     if (this == "java.lang.String") "String"
@@ -25,7 +27,6 @@ fun String.mapKotlinType(): String =
     else if (this == "java.lang.Integer") "Int"
     else if (this == "boolean") "Boolean"
     else if (this == "int") "Int"
-
     else this
 
 
@@ -63,7 +64,7 @@ private fun getParentInterfaces(interfaces: Set<TypeMirror>): Set<TypeMirror> {
 }
 
 @Deprecated("Требует отладки")
-fun  <T> Element.getInterface(cl: Class<T>): TypeElement? {
+fun <T> Element.getInterface(cl: Class<T>): TypeElement? {
     val allInterfaces = this.getAllInterfaces()
 
 
@@ -72,7 +73,7 @@ fun  <T> Element.getInterface(cl: Class<T>): TypeElement? {
             .filterIsInstance<DeclaredType>()
             .map { it.asElement() }
             .filterIsInstance<TypeElement>()
-            .firstOrNull { it.qualifiedName.toString() ==  cl.canonicalName}
+            .firstOrNull { it.qualifiedName.toString() == cl.canonicalName }
 
     return firstOrNull
 }

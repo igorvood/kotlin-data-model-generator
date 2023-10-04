@@ -9,7 +9,8 @@ import java.time.Instant
 
 @FlowEntity
 @ForeignKey(
-    kClass = Deal::class,
+//    kClass = Deal::class.java.canonicalName,
+    kClass = "ru.vood.dmgen.datamodel.Deal",
     currentTypeCols = ["dealId"],
     outTypeCols = ["id"]
 )
