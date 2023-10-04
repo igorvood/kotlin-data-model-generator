@@ -18,64 +18,37 @@ class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(el
 
     val uniqueKeysAnnotation = element.annotations<Uk>()
 
-    val uniqueKeysFields: Map<String, MetaEntityColumn> = uniqueKeysAnnotation
-        .flatMap { anno ->
-            anno.cols
+    val uniqueKeysFields: Map<Uk, List<MetaEntityColumn>> = uniqueKeysAnnotation
+        .map { anno ->
+            anno to anno.cols
                 .map { annoColName ->
                     annoColName to fields.filter { f -> f.name == annoColName }
                         .map { metaCol -> metaCol }
                         .firstOrNull()
                 }
-        }.map { pair: Pair<String, MetaEntityColumn?> ->
-            val metaEntityColumn = pair.second
-            if (metaEntityColumn == null) {
-                error("for entity $name Uk annotation colum ${pair.first} not contains field class ")
-            } else pair.first to metaEntityColumn
-
-        }.associate { pair: Pair<String, MetaEntityColumn> ->
-            val metaEntityColumn = pair.second
-            if (metaEntityColumn.typeCollection != null) {
-                error("for entity $name Uk annotation colum ${pair.first} must not to be collection ${metaEntityColumn.typeCollection}")
+        }.map { uk ->
+            val ukCols = uk.second
+            val map = ukCols.map { pair: Pair<String, MetaEntityColumn?> ->
+                val metaEntityColumn = pair.second
+                if (metaEntityColumn == null) {
+                    error("for entity $name Uk annotation colum ${pair.first} not contains field class ")
+                } else pair.first to metaEntityColumn
             }
-            if (metaEntityColumn.type in ukTypes) {
-                pair
-            } else error("for entity $name Uk annotation colum ${pair.first} must be on of next types $ukTypes, current type is ${metaEntityColumn.type}")
+            uk.first to map
+        }.map { uk ->
+            val ukCols = uk.second
+            ukCols.forEach { pair: Pair<String, MetaEntityColumn> ->
+                val metaEntityColumn = pair.second
+                if (metaEntityColumn.typeCollection != null) {
+                    error("for entity $name Uk annotation colum ${pair.first} must not to be collection ${metaEntityColumn.typeCollection}")
+                }
+                if (metaEntityColumn.type !in ukTypes) {
+                    error("for entity $name Uk annotation colum ${pair.first} must be on of next types $ukTypes, current type is ${metaEntityColumn.type}")
+                }
+            }
+            uk.first to uk.second.map { q -> q.second }
         }
-
-    fun uniqueKeysFields2(): Map<Uk, List<MetaEntityColumn>> {
-        val associate = uniqueKeysAnnotation
-            .map { anno ->
-                anno to anno.cols
-                    .map { annoColName ->
-                        annoColName to fields.filter { f -> f.name == annoColName }
-                            .map { metaCol -> metaCol }
-                            .firstOrNull()
-                    }
-            }.map { uk ->
-                val ukCols = uk.second
-                val map = ukCols.map { pair: Pair<String, MetaEntityColumn?> ->
-                    val metaEntityColumn = pair.second
-                    if (metaEntityColumn == null) {
-                        error("for entity $name Uk annotation colum ${pair.first} not contains field class ")
-                    } else pair.first to metaEntityColumn
-                }
-                uk.first to map
-            }.map { uk ->
-                val ukCols = uk.second
-                ukCols.forEach { pair: Pair<String, MetaEntityColumn> ->
-                    val metaEntityColumn = pair.second
-                    if (metaEntityColumn.typeCollection != null) {
-                        error("for entity $name Uk annotation colum ${pair.first} must not to be collection ${metaEntityColumn.typeCollection}")
-                    }
-                    if (metaEntityColumn.type !in ukTypes) {
-                        error("for entity $name Uk annotation colum ${pair.first} must be on of next types $ukTypes, current type is ${metaEntityColumn.type}")
-                    }
-                }
-                uk.first to uk.second.map { q -> q.second }
-            }
-            .toMap()
-        return associate
-    }
+        .toMap()
 
     companion object {
         val ukTypes = listOf(

@@ -40,7 +40,7 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                     Diagnostic.Kind.WARNING,
                     "${classElement.simpleName} ${classElement.isKotlinElement()} is processed."
                 )
-                metaEntity.uniqueKeysFields2()
+                metaEntity.uniqueKeysFields
                     .forEach { colMap ->
                         processingEnv.messager.printMessage(
                             Diagnostic.Kind.WARNING,
