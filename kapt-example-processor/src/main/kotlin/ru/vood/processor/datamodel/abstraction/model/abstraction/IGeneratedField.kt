@@ -65,14 +65,7 @@ inline fun <reified ANNO : Annotation> Element.necessaryAnnotation(): ANNO = ann
 
 
 inline fun <reified ANNO : Annotation> Element.annotations(): Array<ANNO> {
-//    val actionType = processingEnv.getElementUtils().getTypeElement(ANNO::class.java.name).asType()
-//    val filter = this.annotationMirrors
-//        .filter { it.annotationType.equals(actionType) }
-//        .flatMap { it.elementValues.entries  }
-//    val first = filter.first().value.value
-//    val element = this
     return this.getAnnotationsByType(ANNO::class.java)
-
 }
 
 
