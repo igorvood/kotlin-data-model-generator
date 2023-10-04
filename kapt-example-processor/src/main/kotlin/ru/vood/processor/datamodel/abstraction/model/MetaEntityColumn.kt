@@ -16,11 +16,6 @@ class MetaEntityColumn(
 ) : IGeneratedField(element) {
     override fun isNullable(): Boolean {
         return element.asType().asTypeName().nullable
-        /*return when (val asType = element.asType().asTypeName()) {
-            is ParameterizedTypeName -> asType.nullable
-            is ClassName -> asType.nullable
-            else -> error("$element dot'n compatible")
-        }*/
     }
 
     val inPk: Boolean by lazy {
@@ -28,8 +23,5 @@ class MetaEntityColumn(
             .map { true }
             .orElse(false)
     }
-
-    val uks by lazy { element.annotations<Uk>() }
-
 
 }

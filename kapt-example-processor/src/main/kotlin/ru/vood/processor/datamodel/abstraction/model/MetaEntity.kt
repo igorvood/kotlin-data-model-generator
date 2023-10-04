@@ -4,21 +4,21 @@ import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Uk
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractAnnotatedClass
-import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
+import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
 import javax.lang.model.element.Element
 
 class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
     override fun elementToIGeneratedField(e: Element): MetaEntityColumn =
         MetaEntityColumn(e)
 
-    val flowEntity = element.annotation<FlowEntity>()
+    val flowEntity = element.necessaryAnnotation<FlowEntity>()
 
-    val foreignKeysAnnotation = element.annotations<ForeignKey>()
+    val foreignKeysAnnotations = element.annotations<ForeignKey>()
 
-    val uniqueKeysAnnotation = element.annotations<Uk>()
+    val uniqueKeysAnnotations = element.annotations<Uk>()
 
-    val uniqueKeysFields: Map<Uk, List<MetaEntityColumn>> = uniqueKeysAnnotation
+    val uniqueKeysFields: Map<Uk, List<MetaEntityColumn>> = uniqueKeysAnnotations
         .map { anno ->
             anno to anno.cols
                 .map { annoColName ->
