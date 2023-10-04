@@ -4,6 +4,8 @@ import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Pk
 import ru.vood.dmgen.annotation.Uk
+import java.math.BigDecimal
+import java.time.Instant
 
 @FlowEntity
 @ForeignKey(
@@ -13,6 +15,7 @@ import ru.vood.dmgen.annotation.Uk
 )
 @Uk(["otherSystemProductId", "dealId"])
 @Uk(["dealId", "id"])
+@Uk(["l", "d", "f", "bd", "b", "t"])
 data class Product(
     @Pk
     val id: String,
@@ -22,4 +25,12 @@ data class Product(
     val otherSystemProductId: String,
 
     val productName: String,
+
+
+    val l: Long,
+    val d: Double,
+    val f: Float,
+    val bd: BigDecimal,
+    val b: Boolean,
+    val t: Instant,
 )

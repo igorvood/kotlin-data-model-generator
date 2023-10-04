@@ -20,13 +20,11 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
 
         val elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(FlowEntity::class.java)
 
-        val allMeta:  Map<Element, MetaEntity> = collectMeta(elementsAnnotatedWith)
+        val allMeta: Map<Element, MetaEntity> = collectMeta(elementsAnnotatedWith)
 
 
         val filter = elementsAnnotatedWith
             .filter { it.asType().asTypeName() is ClassName }
-
-
 
 
         val map: Map<Element, MetaEntity> = filter
@@ -42,14 +40,19 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                     Diagnostic.Kind.WARNING,
                     "${classElement.simpleName} ${classElement.isKotlinElement()} is processed."
                 )
-
-                val fields = MetaEntity(classElement)
-                    .fields
-                    .forEach { col ->
+                metaEntity.uniqueKeysFields2()
+                    .forEach { colMap ->
                         processingEnv.messager.printMessage(
                             Diagnostic.Kind.WARNING,
-                            "- ${col.name} ${col.typeCollection} ${col.typeField} is processed."
+                            "- UK ${colMap.key} is processed."
                         )
+                        val cols = colMap.value
+                        cols.forEach { col ->
+                            processingEnv.messager.printMessage(
+                                Diagnostic.Kind.WARNING,
+                                "- ${col.name} ${col.typeCollection} ${col.typeField} is processed."
+                            )
+                        }
                     }
 
                 metaEntity.fields.forEach { println(it.typeCollection) }
@@ -62,8 +65,10 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
         return true
     }
 
-    private fun collectMeta(elementsAnnotatedWith: Set<Element>, collector: Map<Element, MetaEntity> = mapOf()): Map<Element, MetaEntity> {
-
+    private fun collectMeta(
+        elementsAnnotatedWith: Set<Element>,
+        collector: Map<Element, MetaEntity> = mapOf()
+    ): Map<Element, MetaEntity> {
 
 
         val map = when (elementsAnnotatedWith.isEmpty()) {
@@ -82,7 +87,7 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
         }
 
 
-        return  map
+        return map
     }
 
     companion object {
