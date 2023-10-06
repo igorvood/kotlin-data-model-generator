@@ -117,7 +117,7 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
             .distinct()
             .joinToString(",\n")
     if (groupBy.isNotEmpty()){
-        error("Duplicate names entity for class $groupBy")
+        error("Class name without package must be unique. Duplicate names entity for next classes: \n$groupBy")
     }
 
 
