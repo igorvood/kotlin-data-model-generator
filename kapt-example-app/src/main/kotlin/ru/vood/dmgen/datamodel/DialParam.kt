@@ -2,13 +2,11 @@ package ru.vood.dmgen.datamodel
 
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.Pk
+import java.time.LocalDateTime
 
 @FlowEntity
-//@Uk(["paramsList"])
-data class Deal(
+data class DialParam(
     @Pk
     val id: Int,
-
-    val paramsSet: DialParam,
-    val paramsList: List<DialParam>
-)
+    val paramDate: LocalDateTime
+    )

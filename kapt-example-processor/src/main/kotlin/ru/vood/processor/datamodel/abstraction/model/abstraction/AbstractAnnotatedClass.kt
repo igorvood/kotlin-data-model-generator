@@ -32,6 +32,5 @@ abstract class AbstractAnnotatedClass<FIELD_META : IGeneratedField>(
         val dotIdx = name.lastIndexOf('.')
         name.substring(0, dotIdx)
     }
-//    inline fun <reified A: Annotation> annotatedBy()  : List<OrIsNullField> = fields().filter { f -> f.annotation<A>().isPresent }
 
 }
