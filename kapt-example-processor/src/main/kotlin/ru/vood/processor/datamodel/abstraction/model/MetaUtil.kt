@@ -109,7 +109,16 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     val entities: Map<ModelClassName, MetaEntity> =
         allMeta.map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
 
-    val elementsAnnotatedWith = this.getElementsAnnotatedWith(ForeignKey::class.java)
+    val groupBy =
+        entities.map { it.key to it.value.name }
+            .groupBy { it.second }
+            .filter { it.value.size>1 }
+            .flatMap { it.value.map { e->e.first } }
+            .distinct()
+            .joinToString(",\n")
+    if (groupBy.isNotEmpty()){
+        error("Duplicate names entity for class $groupBy")
+    }
 
 
     val fks = entities.map { it.value }

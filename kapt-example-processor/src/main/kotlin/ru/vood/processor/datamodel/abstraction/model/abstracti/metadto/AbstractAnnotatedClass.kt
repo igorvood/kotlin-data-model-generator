@@ -14,7 +14,7 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
         else -> error("unsupported class $t")
     }
 
-    val name: String by lazy { element.asType().toString() }
+    val name: String by lazy { element.asType().toString().split(".").last() }
 
     abstract fun elementToIGeneratedField(e: Element): FIELD_META
 
