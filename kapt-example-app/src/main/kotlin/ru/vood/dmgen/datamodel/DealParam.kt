@@ -5,7 +5,7 @@ import ru.vood.dmgen.annotation.Pk
 import java.time.LocalDateTime
 
 @FlowEntity
-data class DialParam(
+data class DealParam(
     @Pk
     val id: Int,
     val paramDate: LocalDateTime
