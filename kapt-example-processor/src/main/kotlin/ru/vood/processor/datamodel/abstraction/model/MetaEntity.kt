@@ -4,8 +4,8 @@ import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Uk
 import ru.vood.processor.datamodel.abstraction.model.abstracti.metadto.AbstractAnnotatedClass
-import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
-import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
+import ru.vood.processor.datamodel.abstraction.model.abstracti.annotations
+import ru.vood.processor.datamodel.abstraction.model.abstracti.necessaryAnnotation
 import javax.lang.model.element.Element
 
 data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
