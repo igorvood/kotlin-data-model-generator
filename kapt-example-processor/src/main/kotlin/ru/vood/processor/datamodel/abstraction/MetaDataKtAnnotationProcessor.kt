@@ -31,6 +31,15 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
                     }
                 }
 
+                with(entity.value.uniqueKeysFields) {
+                    forEach { uk ->
+                        log(
+                            Diagnostic.Kind.NOTE,
+                            "Field(name, type, collection type) - ${uk} "
+                        )
+                    }
+                }
+
                 println(metaInformation)
 
             }
