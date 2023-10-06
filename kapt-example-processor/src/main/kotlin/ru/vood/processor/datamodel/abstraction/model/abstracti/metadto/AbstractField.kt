@@ -45,7 +45,6 @@ abstract class AbstractField(val element: Element) {
         { it },
         {
             it.typeArguments[0]
-
         }
     )
 
