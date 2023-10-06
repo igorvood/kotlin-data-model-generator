@@ -1,10 +1,10 @@
-package ru.vood.processor.datamodel.abstraction.model.abstraction
+package ru.vood.processor.datamodel.abstraction.model.abstracti.metadto
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asTypeName
+import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import java.util.*
-import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
 abstract class IGeneratedField(val element: Element) {
