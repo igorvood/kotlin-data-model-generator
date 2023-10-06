@@ -18,9 +18,12 @@ class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(el
 
     val uniqueKeysAnnotations = element.annotations<Uk>()
 
-    val uniqueKeysFields: Map<Uk, List<MetaEntityColumn>> = uniqueKeysAnnotations
+    val pkColumns =
+        UkDto(fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()) to fields.filter { it.inPk }
+
+    val uniqueKeysFields: Map<UkDto, List<MetaEntityColumn>> = uniqueKeysAnnotations
         .map { anno ->
-            anno to anno.cols
+            UkDto(anno.cols.map { ColumnName(it) }.toSet())             to anno.cols
                 .map { annoColName ->
                     annoColName to fields.filter { f -> f.name == annoColName }
                         .map { metaCol -> metaCol }
@@ -49,6 +52,7 @@ class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(el
             uk.first to uk.second.map { q -> q.second }
         }
         .toMap()
+        .plus(pkColumns)
 
     companion object {
         val ukTypes = listOf(

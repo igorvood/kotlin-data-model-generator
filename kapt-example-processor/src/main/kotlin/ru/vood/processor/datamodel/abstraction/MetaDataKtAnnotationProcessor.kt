@@ -120,7 +120,7 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                         b
                     }
                 if (uks.size != 1) {
-                    error("Для внешнего ключа $foreignKey во внешней таблице не найден уникальный ключ")
+                    error("У сущности ${currentClass.value} для внешнего ключа $foreignKey во внешней таблице не найден уникальный ключ\nuks-> ${uks}")
                 }
                 val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity)
                 val plus = collector.plus(element)

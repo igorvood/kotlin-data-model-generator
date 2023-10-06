@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model
 
-class MetaForeignKey(kClass: MetaEntity, currentTypeCols: MetaEntity) {
-
-}
+data class MetaForeignKey(
+    val fromEntity: MetaEntity,
+    val toEntity: MetaEntity
+    )
