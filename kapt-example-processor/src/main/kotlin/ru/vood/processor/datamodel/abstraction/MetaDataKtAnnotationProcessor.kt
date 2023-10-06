@@ -37,8 +37,8 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                 qw.foreignKeysAnnotations.map { fk -> fk to ModelClassName(qw.kotlinMetaClass.toString()) }
             }
 
-        collectMetaForeignKey(fks, entities)
-
+        val collectMetaForeignKey = collectMetaForeignKey(fks, entities)
+        println(collectMetaForeignKey)
 
         roundEnv.getElementsAnnotatedWith(FlowEntity::class.java).forEach { classElement ->
 //            processingEnv.messager.printMessage(Diagnostic.Kind.WARNING, "${classElement.simpleName} is processed.")
@@ -80,7 +80,7 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
         elementsAnnotatedWith: List<Pair<ForeignKey, ModelClassName>>,
         entities: Map<ModelClassName, MetaEntity>,
         collector: Set<MetaForeignKey> = setOf()
-    ) {
+    ): Set<MetaForeignKey> {
 
         val map = when (elementsAnnotatedWith.isEmpty()) {
             true -> collector
@@ -124,12 +124,12 @@ class MetaDataKtAnnotationProcessor : AbstractProcessor() {
                 }
                 val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity)
                 val plus = collector.plus(element)
-                plus
+                collectMetaForeignKey(elementsAnnotatedWith.drop(1), entities, plus)
             }
         }
 
 
-//        TODO("Not yet implemented")
+        return map
     }
 
     private fun metaEntityColumns(

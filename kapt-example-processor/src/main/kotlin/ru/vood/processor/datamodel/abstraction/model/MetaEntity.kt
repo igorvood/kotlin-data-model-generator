@@ -8,7 +8,7 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
 import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
 import javax.lang.model.element.Element
 
-class MetaEntity(element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
+data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
     override fun elementToIGeneratedField(e: Element): MetaEntityColumn =
         MetaEntityColumn(e)
 
