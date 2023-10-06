@@ -7,7 +7,7 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import java.util.*
 import javax.lang.model.element.Element
 
-abstract class IGeneratedField(val element: Element) {
+abstract class AbstractField(val element: Element) {
 
     val kotlinMetaClass = fold({ it }, { it })
     protected inline fun <reified T> fold(
@@ -53,7 +53,7 @@ abstract class IGeneratedField(val element: Element) {
 //    fun isUpdateble(): Boolean
 }
 
-inline fun <reified ANNO : Annotation> IGeneratedField.annotation(): Optional<ANNO> =
+inline fun <reified ANNO : Annotation> AbstractField.annotation(): Optional<ANNO> =
     element.annotation()
 
 

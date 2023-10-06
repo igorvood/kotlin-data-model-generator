@@ -5,7 +5,7 @@ import com.squareup.kotlinpoet.asTypeName
 
 import javax.lang.model.element.Element
 
-abstract class AbstractAnnotatedClass<FIELD_META : IGeneratedField>(
+abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
     private val element: Element
 )/*<Annotation>*/ {
 
