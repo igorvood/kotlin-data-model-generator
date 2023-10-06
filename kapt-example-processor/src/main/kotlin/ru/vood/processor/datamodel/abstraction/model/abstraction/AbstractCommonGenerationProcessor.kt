@@ -1,4 +1,4 @@
-package ru.vood.processor.datamodel.abstraction.model.abstracti
+package ru.vood.processor.datamodel.abstraction.model.abstraction
 
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Filer

@@ -2,7 +2,7 @@ package ru.vood.processor.datamodel.abstraction
 
 import com.google.auto.service.AutoService
 import ru.vood.processor.datamodel.abstraction.model.*
-import ru.vood.processor.datamodel.abstraction.model.abstracti.AbstractCommonGenerationProcessor
+import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion

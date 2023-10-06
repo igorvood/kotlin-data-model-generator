@@ -1,9 +1,9 @@
-package ru.vood.processor.datamodel.abstraction.model.abstracti.metadto
+package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asTypeName
-import ru.vood.processor.datamodel.abstraction.model.abstracti.annotation
+import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import java.util.*
 import javax.lang.model.element.Element
 

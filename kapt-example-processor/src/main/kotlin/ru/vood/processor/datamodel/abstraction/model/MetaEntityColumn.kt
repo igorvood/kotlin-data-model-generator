@@ -2,9 +2,9 @@ package ru.vood.processor.datamodel.abstraction.model
 
 import com.squareup.kotlinpoet.asTypeName
 import ru.vood.dmgen.annotation.Pk
-import ru.vood.processor.datamodel.abstraction.model.abstracti.metadto.AbstractField
+import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractField
 
-import ru.vood.processor.datamodel.abstraction.model.abstracti.annotation
+import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import javax.lang.model.element.Element
 
 class MetaEntityColumn(
