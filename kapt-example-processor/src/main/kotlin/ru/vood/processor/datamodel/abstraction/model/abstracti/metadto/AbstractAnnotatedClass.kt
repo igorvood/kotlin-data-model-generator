@@ -1,7 +1,8 @@
-package ru.vood.processor.datamodel.abstraction.model.abstraction
+package ru.vood.processor.datamodel.abstraction.model.abstracti.metadto
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
+import ru.vood.processor.datamodel.abstraction.model.abstraction.IGeneratedField
 import javax.lang.model.element.Element
 
 abstract class AbstractAnnotatedClass<FIELD_META : IGeneratedField>(

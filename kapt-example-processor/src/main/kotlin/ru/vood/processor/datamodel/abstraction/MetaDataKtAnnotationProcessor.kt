@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.asTypeName
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.processor.datamodel.abstraction.model.*
+import ru.vood.processor.datamodel.abstraction.model.abstracti.AbstractCommonGenerationProcessor
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -15,7 +16,7 @@ import javax.tools.Diagnostic
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes("ru.vood.dmgen.annotation.FlowEntity")
-class MetaDataKtAnnotationProcessor : AbstractProcessor() {
+class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
         val metaInformation = roundEnv.metaInformation()

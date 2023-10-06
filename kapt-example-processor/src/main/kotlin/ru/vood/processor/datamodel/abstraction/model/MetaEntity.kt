@@ -3,7 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Uk
-import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractAnnotatedClass
+import ru.vood.processor.datamodel.abstraction.model.abstracti.metadto.AbstractAnnotatedClass
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
 import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
 import javax.lang.model.element.Element
