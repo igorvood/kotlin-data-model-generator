@@ -4,6 +4,7 @@ import com.google.auto.service.AutoService
 import ru.vood.processor.datamodel.abstraction.model.*
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
+import ru.vood.processor.datamodel.abstraction.model.gen.ColumnEntityEnumGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.EntityEnumGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.ForeignKeyEnumGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.UniqueKeyEnumGenerator
@@ -50,6 +51,7 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
 
         val setMetaEnt = metaInformation.entities.map { it.value }.toSet()
         EntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+        ColumnEntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
         UniqueKeyEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
         ForeignKeyEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.collectMetaForeignKey)
 
