@@ -4,7 +4,8 @@ data class MetaForeignKey(
     val name: ForeignKeyName,
     val fromEntity: MetaEntity,
     val toEntity: MetaEntity,
-    val fkCols: Set<FkCol>
+    val fkCols: Set<FkCol>,
+    val uk: UkDto
 )
 
 @JvmInline

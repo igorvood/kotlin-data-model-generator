@@ -90,11 +90,14 @@ fun collectMetaForeignKey(
                     val b = ukCols.minus(fkCols).isEmpty() && fkCols.minus(ukCols).isEmpty()
                     b
                 }
-            if (uks.size != 1) {
+            val ukDto = if (uks.size != 1) {
                 error("""У сущности ${currentClass.value} 
                     для внешнего ключа $foreignKey 
                     во внешней таблице должен быть строго один уникальный ключ
-                    список подходящих ключей-> ${uks.map { it.key.name.value }}""")
+                    список подходящих ключей-> ${uks.map { it.key.name.value }}"""
+                )
+            } else {
+                uks.entries.first().key
             }
 
 //                .size != toCols.size
@@ -103,8 +106,11 @@ fun collectMetaForeignKey(
                 .toSet()
 
 
+
             val element =
-                MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols)
+                MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols,
+                    ukDto
+                )
 
 
             val plus = collector.plus(element)
