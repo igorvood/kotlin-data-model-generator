@@ -24,7 +24,7 @@ class ColumnEntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { it.shortName }
+                    .flatMap { ent -> ent.fields.map { f->ent.shortName+"_"+f.name } }
                     .sorted()
                     .joinToString(",\n")
 
