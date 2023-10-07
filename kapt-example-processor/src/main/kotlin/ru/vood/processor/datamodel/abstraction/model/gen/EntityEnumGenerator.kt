@@ -12,7 +12,7 @@ import javax.annotation.processing.ProcessingEnvironment
 class EntityEnumGenerator(
     messager: Messager,
     filer: Filer,
-     processingEnv: ProcessingEnvironment
+    processingEnv: ProcessingEnvironment
 
 ) : AbstractGenerator<Set<MetaEntity>>(messager, filer, processingEnv) {
 
@@ -20,23 +20,25 @@ class EntityEnumGenerator(
         get() = "metaEnum"
 
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
+        return when (generatedClassData.isEmpty()) {
+            true -> setOf()
+            false -> {
+                val commonPackage: String = "ru.vood.datamodel.meta.enums"//calculatePackage(packages)
 
-//        val packages = generatedClassData.map { it.packageName }
-
-        val commonPackage: String = "ru.vood.datamodel.meta.enums"//calculatePackage(packages)
-
-        val entities = generatedClassData.joinToString(",") { metaEntity ->
-            metaEntity.shortName
-        }
-        val trimIndent = """
+                val entities = generatedClassData
+                    .map { it.shortName }
+                    .sorted()
+                    .joinToString(",\n")
+                val trimIndent = """
             package $commonPackage
-            enum class asd {
+            enum class MetaEntityEnum {
             $entities
             }
         """.trimIndent()
+                setOf(GeneratedFile(FileName("MetaEntityEnum"), GeneratedCode(trimIndent)))
+            }
+        }
 
-
-        return setOf(GeneratedFile(FileName("MetaEntityEnum"), GeneratedCode(trimIndent)))
 
     }
 

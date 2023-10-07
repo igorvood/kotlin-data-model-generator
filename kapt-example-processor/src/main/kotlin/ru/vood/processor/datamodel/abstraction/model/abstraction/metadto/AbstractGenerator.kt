@@ -13,8 +13,6 @@ abstract class AbstractGenerator<META>(
     val messager: Messager,
     val filer: Filer,
     val processingEnv: ProcessingEnvironment
-
-
 ) {
 
     abstract fun textGenerator(generatedClassData: META): Set<GeneratedFile>
