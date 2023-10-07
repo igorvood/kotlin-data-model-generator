@@ -71,7 +71,7 @@ fun collectMetaForeignKey(
                 error("Не совпадают по кол-ву списки колонок currentTypeCols и outTypeCols во внешнем ключе $foreignKey")
             }
 
-            val map = fromCols.indices
+            fromCols.indices
                 .forEach { idx ->
                     val fromMetaEntityColumn = fromCols[idx]
                     val toMetaEntityColumn = toCols[idx]
@@ -99,7 +99,7 @@ fun collectMetaForeignKey(
                 .toSet()
 
 
-            val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity, fkCols)
+            val element = MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols)
 
 
 
