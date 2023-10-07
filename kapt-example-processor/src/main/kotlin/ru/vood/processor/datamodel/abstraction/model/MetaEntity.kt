@@ -19,11 +19,11 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
     val uniqueKeysAnnotations = element.annotations<Uk>()
 
     val pkColumns =
-        UkDto(fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()) to fields.filter { it.inPk }
+        UkDto(UkName(shortName+"_PK"),fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()) to fields.filter { it.inPk }
 
     val uniqueKeysFields: Map<UkDto, List<MetaEntityColumn>> = uniqueKeysAnnotations
         .map { anno ->
-            UkDto(anno.cols.map { ColumnName(it) }.toSet())             to anno.cols
+            UkDto(UkName(anno.name), anno.cols.map { ColumnName(it) }.toSet())             to anno.cols
                 .map { annoColName ->
                     annoColName to fields.filter { f -> f.name == annoColName }
                         .map { metaCol -> metaCol }

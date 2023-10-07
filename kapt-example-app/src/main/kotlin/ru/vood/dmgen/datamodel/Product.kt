@@ -18,7 +18,7 @@ import java.time.Instant
 )
 @Uk("Product_UK_1",
     ["otherSystemProductId", "dealId"])
-@Uk("Product_UK_2",["dealId", "id"])
+//@Uk("Product_UK_2",["dealId", "id"])
 @Uk("Product_UK_3",["l", "d", "f", "bd", "b", "t"])
 data class Product(
     @Pk

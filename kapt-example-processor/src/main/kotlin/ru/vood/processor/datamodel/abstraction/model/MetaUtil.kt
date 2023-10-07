@@ -91,7 +91,10 @@ fun collectMetaForeignKey(
                     b
                 }
             if (uks.size != 1) {
-                error("У сущности ${currentClass.value} для внешнего ключа $foreignKey во внешней таблице не найден уникальный ключ\nuks-> ${uks}")
+                error("""У сущности ${currentClass.value} 
+                    для внешнего ключа $foreignKey 
+                    во внешней таблице должен быть строго один уникальный ключ
+                    список подходящих ключей-> ${uks.map { it.key.name.value }}""")
             }
 
 //                .size != toCols.size
