@@ -90,7 +90,19 @@ fun collectMetaForeignKey(
             if (uks.size != 1) {
                 error("У сущности ${currentClass.value} для внешнего ключа $foreignKey во внешней таблице не найден уникальный ключ\nuks-> ${uks}")
             }
-            val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity)
+
+//                .size != toCols.size
+            val fkCols = fromCols.withIndex()
+                .map { from -> FkCol(from.value, toCols[from.index]) }
+                .toSet()
+
+
+            val element = MetaForeignKey(entities[currentClass]!!, foreignMetaEntity, fkCols)
+
+
+
+
+
             val plus = collector.plus(element)
             collectMetaForeignKey(elementsAnnotatedWith.drop(1), entities, plus)
         }
