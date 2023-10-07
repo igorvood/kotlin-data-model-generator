@@ -26,7 +26,10 @@ class ColumnEntityEnumGenerator(
                 val entities = generatedClassData
                     .flatMap { ent -> ent.fields
                         .map { f->
-                            "${ent.shortName}_${f.name}(${ent.shortName})"
+                            """${ent.shortName}_${f.name}(
+                                |${ent.shortName},
+                                |${ent.kotlinMetaClass.canonicalName}::${f.name}
+                                |)""".trimMargin()
                         }
                     }
                     .sorted()
@@ -36,8 +39,12 @@ class ColumnEntityEnumGenerator(
                     """package $commonPackage
                         
 import $commonPackage.DataDictionaryEntityEnum.*                        
+import kotlin.reflect.KProperty1
 
-enum class $nameClass(val entity: DataDictionaryEntityEnum) {
+enum class $nameClass(
+val entity: DataDictionaryEntityEnum,
+val kProperty1: KProperty1<*, *>,
+) {
 $entities
 }
 """
