@@ -3,6 +3,7 @@ package ru.vood.dmgen.datamodel
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Pk
+import ru.vood.dmgen.annotation.Uk
 
 @FlowEntity
 @ForeignKey(
@@ -19,6 +20,7 @@ import ru.vood.dmgen.annotation.Pk
     currentTypeCols = ["dealId", "productId"],
     outTypeCols = ["dealId", "id"]
 )
+//@Uk("Product_UK_3",["summa"])
 data class ProductPayments(
     @Pk
     val productId: String,

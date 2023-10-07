@@ -19,6 +19,7 @@ fun collectMetaEntity(
             if (collector.contains(head)) {
                 collectMetaEntity(tailElementsAnnotatedWith, collector)
             } else {
+
                 val plus = collector.plus(head to MetaEntity(head))
                 collectMetaEntity(tailElementsAnnotatedWith, plus)
             }
@@ -130,6 +131,15 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
 
     val entities: Map<ModelClassName, MetaEntity> =
         allMeta.map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
+
+    val map = entities.flatMap { it.value.uniqueKeysFields.entries.map { w -> w.key.name to it.key } }
+        .groupBy { it.first.value }
+        .filter { it.value.size>1 }
+        .map { "dublicate uk name ${it.key} for entities ${it.value.map { w->w.second.value }}" }
+
+if (map.isNotEmpty()){
+    error(map)
+}
 
     val groupBy =
         entities.map { it.key to it.value.name }
