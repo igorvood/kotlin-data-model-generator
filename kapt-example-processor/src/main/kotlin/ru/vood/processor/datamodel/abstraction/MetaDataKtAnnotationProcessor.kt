@@ -3,6 +3,8 @@ package ru.vood.processor.datamodel.abstraction
 import com.google.auto.service.AutoService
 import ru.vood.processor.datamodel.abstraction.model.*
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
+import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
+import ru.vood.processor.datamodel.abstraction.model.gen.EntityEnumGenerator
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -13,6 +15,7 @@ import javax.tools.Diagnostic
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 @SupportedAnnotationTypes("ru.vood.dmgen.annotation.FlowEntity")
+@SupportedOptions(KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
@@ -40,10 +43,14 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
                     }
                 }
 
-                println(metaInformation)
 
             }
-                return true
+
+        EntityEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.entities.map { it.value }.toSet())
+
+
+        println(metaInformation)
+        return true
 
     }
 
