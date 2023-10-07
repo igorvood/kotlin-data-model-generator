@@ -24,15 +24,28 @@ class UniqueKeyEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .flatMap { it.uniqueKeysFields.keys }
-                    .map { it.name.value }
+                    .flatMap { metaEnt ->
+                        metaEnt.uniqueKeysFields.keys
+                            .map { ukDto ->
+                                val ukCols =
+                                    ukDto.cols.map { columnName -> metaEnt.name + "_" + columnName.value }
+                                        .sorted()
+                                        .joinToString(",")
+
+                                ukDto.name.value + "(setOf($ukCols))"
+
+                            }
+                    }
+
                     .sorted()
                     .joinToString(",\n")
 
                 val trimIndent =
                     """package $commonPackage
+                        
+import $commonPackage.DataDictionaryColumnEntityEnum.*
 
-enum class $nameClass {
+enum class $nameClass(val columns: Set<DataDictionaryColumnEntityEnum>) {
 $entities
 }
 """

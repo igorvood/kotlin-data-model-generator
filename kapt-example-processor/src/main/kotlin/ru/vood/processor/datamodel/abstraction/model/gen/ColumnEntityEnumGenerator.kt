@@ -24,14 +24,20 @@ class ColumnEntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .flatMap { ent -> ent.fields.map { f->ent.shortName+"_"+f.name } }
+                    .flatMap { ent -> ent.fields
+                        .map { f->
+                            "${ent.shortName}_${f.name}(${ent.shortName})"
+                        }
+                    }
                     .sorted()
                     .joinToString(",\n")
 
                 val trimIndent =
                     """package $commonPackage
+                        
+import $commonPackage.DataDictionaryEntityEnum.*                        
 
-enum class $nameClass {
+enum class $nameClass(val entity: DataDictionaryEntityEnum) {
 $entities
 }
 """
