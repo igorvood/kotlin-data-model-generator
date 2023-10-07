@@ -24,14 +24,17 @@ class EntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { it.shortName }
+                    .map { it.shortName+"(${it.kotlinMetaClass.canonicalName}::class)" }
                     .sorted()
                     .joinToString(",\n")
 
                 val trimIndent =
                     """package $commonPackage
+import kotlin.reflect.KClass
 
-enum class $nameClass {
+enum class $nameClass(
+val designkClass: KClass<*>
+) {
 $entities
 }
 """
