@@ -24,14 +24,26 @@ class ForeignKeyEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { it.name.value }
+                    .map { metaForeign ->
+
+
+
+                        metaForeign.name.value+"(${metaForeign.fromEntity.shortName}, ${metaForeign.toEntity.shortName}, ${metaForeign.uk.name.value})"
+                    }
                     .sorted()
                     .joinToString(",\n")
 
                 val trimIndent =
                     """package $commonPackage
+                        
+import $commonPackage.DataDictionaryEntityEnum.*
+import $commonPackage.DataDictionaryUniqueKeyEnum.*
 
-enum class $nameClass {
+enum class $nameClass(
+    val fromEntity: DataDictionaryEntityEnum,
+    val toEntity: DataDictionaryEntityEnum,
+    val uk: DataDictionaryUniqueKeyEnum
+) {
 $entities
 }
 """
