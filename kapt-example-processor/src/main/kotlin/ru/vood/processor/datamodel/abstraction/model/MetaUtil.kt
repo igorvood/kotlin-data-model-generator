@@ -33,10 +33,11 @@ fun collectMetaEntity(
 fun metaEntityColumns(
     entities: Map<ModelClassName, MetaEntity>,
     entity: ModelClassName,
-    cols: Array<String>
+    cols: Array<String>,
+    currentClass: ModelClassName
 ): List<MetaEntityColumn> {
     val fromMetaEntity =
-        entities[entity] ?: error("Не найдена сущность в контексте ${entity.value}")
+        entities[entity] ?: error("Для внешнего ключа сушности ${currentClass.value} Не найдена сущность в контексте ${entity.value}")
     val fromCols = cols.map { fkField ->
         fromMetaEntity.fields.filter { field -> field.name == fkField }.firstOrNull()
             ?: error("Не найдено поле ${fkField}  внешнего ключа для сущности  ${entity.value}")
@@ -57,11 +58,12 @@ fun collectMetaForeignKey(
             val foreignKey = head.first
             val currentClass = head.second
             val foreignClass = ModelClassName(foreignKey.kClass)
-            val fromCols = metaEntityColumns(entities, currentClass, foreignKey.currentTypeCols)
+            val fromCols = metaEntityColumns(entities, currentClass, foreignKey.currentTypeCols, currentClass)
 
             val toCols = metaEntityColumns(
                 entities = entities,
                 entity = foreignClass,
+                currentClass = currentClass,
                 cols = foreignKey.outTypeCols
             )
 
