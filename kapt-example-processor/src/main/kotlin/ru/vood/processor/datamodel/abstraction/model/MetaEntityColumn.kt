@@ -11,7 +11,7 @@ class MetaEntityColumn(
     element: Element
 ) : AbstractField(element) {
     override fun isNullable(): Boolean {
-        return element.asType().asTypeName().nullable
+        return element.asType().asTypeName().isNullable
     }
 
     val inPk: Boolean by lazy {
