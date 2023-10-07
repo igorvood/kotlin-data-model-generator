@@ -1,5 +1,6 @@
 package ru.vood.dmgen.proba
 
+import kotlinx.serialization.Serializable
 import ru.vood.datamodel.meta.enums.DataDictionaryColumnEntityEnum
 import ru.vood.datamodel.meta.enums.DataDictionaryEntityEnum
 import ru.vood.datamodel.meta.enums.DataDictionaryForeignKeyEnum
@@ -24,4 +25,5 @@ abstract sealed class EntityContext<ENTITY>{
 //
 //    }
 }
+@Serializable
 data class DealParamEntityContext(val id: String): EntityContext<ru.vood.dmgen.datamodel.Deal>()
