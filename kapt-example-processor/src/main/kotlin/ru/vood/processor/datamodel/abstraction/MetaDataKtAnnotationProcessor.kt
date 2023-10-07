@@ -5,6 +5,7 @@ import ru.vood.processor.datamodel.abstraction.model.*
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
 import ru.vood.processor.datamodel.abstraction.model.gen.EntityEnumGenerator
+import ru.vood.processor.datamodel.abstraction.model.gen.ForeignKeyEnumGenerator
 import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
@@ -47,9 +48,8 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
             }
 
         EntityEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.entities.map { it.value }.toSet())
+        ForeignKeyEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.collectMetaForeignKey)
 
-
-        println(metaInformation)
         return true
 
     }
