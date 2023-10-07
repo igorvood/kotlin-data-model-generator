@@ -4,5 +4,6 @@ package ru.vood.dmgen.annotation
 @Retention(AnnotationRetention.RUNTIME)
 @Repeatable
 annotation class Uk(
+    val name: String,
     val cols: Array<String>,
 )

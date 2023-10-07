@@ -10,13 +10,16 @@ import java.time.Instant
 @FlowEntity
 @ForeignKey(
 //    kClass = Deal::class.java.canonicalName,
+
     kClass = "ru.vood.dmgen.datamodel.Deal",
+    "Product_FK_1",
     currentTypeCols = ["dealId"],
     outTypeCols = ["id"]
 )
-@Uk(["otherSystemProductId", "dealId"])
-@Uk(["dealId", "id"])
-@Uk(["l", "d", "f", "bd", "b", "t"])
+@Uk("Product_UK_1",
+    ["otherSystemProductId", "dealId"])
+@Uk("Product_UK_2",["dealId", "id"])
+@Uk("Product_UK_3",["l", "d", "f", "bd", "b", "t"])
 data class Product(
     @Pk
     val id: String,
