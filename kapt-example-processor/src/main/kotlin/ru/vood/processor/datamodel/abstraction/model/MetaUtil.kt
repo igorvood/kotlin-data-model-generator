@@ -37,7 +37,8 @@ fun metaEntityColumns(
     currentClass: ModelClassName
 ): List<MetaEntityColumn> {
     val fromMetaEntity =
-        entities[entity] ?: error("Для внешнего ключа сушности ${currentClass.value} Не найдена сущность в контексте ${entity.value}")
+        entities[entity]
+            ?: error("Для внешнего ключа сушности ${currentClass.value} Не найдена сущность в контексте ${entity.value}")
     val fromCols = cols.map { fkField ->
         fromMetaEntity.fields.filter { field -> field.name == fkField }.firstOrNull()
             ?: error("Не найдено поле ${fkField}  внешнего ключа для сущности  ${entity.value}")
@@ -99,10 +100,8 @@ fun collectMetaForeignKey(
                 .toSet()
 
 
-            val element = MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols)
-
-
-
+            val element =
+                MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols)
 
 
             val plus = collector.plus(element)
@@ -126,11 +125,11 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     val groupBy =
         entities.map { it.key to it.value.name }
             .groupBy { it.second }
-            .filter { it.value.size>1 }
-            .flatMap { it.value.map { e->e.first } }
+            .filter { it.value.size > 1 }
+            .flatMap { it.value.map { e -> e.first } }
             .distinct()
             .joinToString(",\n")
-    if (groupBy.isNotEmpty()){
+    if (groupBy.isNotEmpty()) {
         error("Class name without package must be unique. Duplicate names entity for next classes: \n$groupBy")
     }
 
@@ -141,6 +140,20 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
         }
 
     val collectMetaForeignKey = collectMetaForeignKey(fks, entities)
+
+
+    val dublicatetdFkName =
+        collectMetaForeignKey.map { it.name to it.fromEntity.name }
+            .groupBy { it.first }
+            .filter { it.value.size > 1 }
+            .map { "dublicate FK name ${it.key.value} in enties: ${it.value.map { q -> q.second }}" }
+            .joinToString("\n")
+
+    if (dublicatetdFkName.isNotEmpty()){
+        error(dublicatetdFkName)
+    }
+//    assert(dublicatetdFkName.isNotEmpty()) { dublicatetdFkName }
+
 
     return MetaInformation(collectMetaForeignKey, entities)
 }

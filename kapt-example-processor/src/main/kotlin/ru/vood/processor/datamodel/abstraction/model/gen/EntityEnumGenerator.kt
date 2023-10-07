@@ -74,7 +74,3 @@ $entities
     }
 }
 
-enum class asd {
-    asds,
-    asdsd
-}
