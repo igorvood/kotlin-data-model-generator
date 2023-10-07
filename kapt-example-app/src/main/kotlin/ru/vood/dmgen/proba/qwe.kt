@@ -16,37 +16,32 @@ fun main() {
 
 
 
-//    val asd : Map<DataDictionaryEntityEnum, Set<MetaDependency>> = collectDependency( DataDictionaryForeignKeyEnum.values())
+    val asd : Map<DataDictionaryEntityEnum, Set<MetaDependency>> = collectDependency(DataDictionaryEntityEnum.values().toList(), DataDictionaryForeignKeyEnum.values().toList())
 //
-//    println(asd)
+    println(asd)
 
 }
 
-//fun collectDependency(values: Array<DataDictionaryForeignKeyEnum>): Map<DataDictionaryEntityEnum, Set<MetaDependency>> {
-//
-//    fun recursiveCollectDependency(values: Array<DataDictionaryForeignKeyEnum>, collector: Map<DataDictionaryEntityEnum, Set<MetaDependency>>): Map<DataDictionaryEntityEnum, Set<MetaDependency>>{
-//      return  when(values.isEmpty()){
-//            true -> collector
-//            false -> {
-//                val dataDictionaryForeignKeyEnum = values[0]
-//                val let = collector[dataDictionaryForeignKeyEnum.fromEntity]?.let { metaDependencies ->
-//                    metaDependencies.plus(MetaDependency(dataDictionaryForeignKeyEnum.toEntity))
-//                } ?: setOf(MetaDependency(dataDictionaryForeignKeyEnum.toEntity))
-//
-//                val plus = collector.plus(dataDictionaryForeignKeyEnum.fromEntity to let)
-//
-//                val values1 = values.drop(1).toTypedArray()
-//                recursiveCollectDependency(values1, plus)
-//
-//            }
-//        }
-//
-//
-//    }
-//
-//
-//    return recursiveCollectDependency(values, mapOf())
-//}
+fun collectDependency(entities: List<DataDictionaryEntityEnum>, foreignKey: List<DataDictionaryForeignKeyEnum>): Map<DataDictionaryEntityEnum, Set<MetaDependency>> {
+
+    tailrec fun recursiveCollectDependency(values: List<DataDictionaryForeignKeyEnum>, collector: Map<DataDictionaryEntityEnum, Set<MetaDependency>>): Map<DataDictionaryEntityEnum, Set<MetaDependency>>{
+      return  when(values.isEmpty()){
+            true -> collector
+            false -> {
+                val dataDictionaryForeignKeyEnum = values[0]
+                val let = collector[dataDictionaryForeignKeyEnum.fromEntity]?.plus(MetaDependency(dataDictionaryForeignKeyEnum.toEntity))
+                    ?: setOf(MetaDependency(dataDictionaryForeignKeyEnum.toEntity))
+
+                val plus = collector.plus(dataDictionaryForeignKeyEnum.fromEntity to let)
+
+                val values1 = values.drop(1)
+                recursiveCollectDependency(values1, plus)
+            }
+        }
+    }
+    return recursiveCollectDependency(foreignKey, entities.associateWith { setOf() })
+//    return mapOf()
+}
 
 
 abstract sealed class EntityContext<ENTITY>{
