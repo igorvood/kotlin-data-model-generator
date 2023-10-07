@@ -39,7 +39,9 @@ abstract class AbstractGenerator<META>(
     abstract val subDir: String
 
 
-    val generationDirectory = kaptKotlinGeneratedDir + subDir
+    val generationDirectory by lazy {
+        kaptKotlinGeneratedDir +"/"+ subDir
+    }
 
     protected fun log(kind: Diagnostic.Kind, msg: CharSequence?) {
 
