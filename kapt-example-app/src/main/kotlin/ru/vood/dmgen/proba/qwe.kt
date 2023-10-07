@@ -1,7 +1,8 @@
 package ru.vood.dmgen.proba
 
-import ru.vood.datamodel.meta.enums.MetaEntityEnum
+import ru.vood.datamodel.meta.enums.DataDictionaryEntityEnum
+
 
 fun asd(){
-    println(MetaEntityEnum.DealParam)
+    println(DataDictionaryEntityEnum.DealParam)
 }

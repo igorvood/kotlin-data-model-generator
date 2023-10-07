@@ -32,11 +32,11 @@ class EntityEnumGenerator(
                 val trimIndent =
 """package $commonPackage
 
-enum class MetaEntityEnum {
+enum class DataDictionaryEntityEnum {
 $entities
 }
 """
-                setOf(GeneratedFile(FileName("MetaEntityEnum"), GeneratedCode(trimIndent)))
+                setOf(GeneratedFile(FileName("DataDictionaryEntityEnum"), GeneratedCode(trimIndent)))
             }
         }
 
