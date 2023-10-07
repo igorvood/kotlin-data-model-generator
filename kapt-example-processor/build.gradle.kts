@@ -14,9 +14,6 @@ dependencies {
 //    implementation ("com.squareup:kotlinpoet:0.5.0")
     implementation ("com.squareup:kotlinpoet:1.14.2")
     kapt("com.google.auto.service:auto-service:1.0.1")
-//    compile 'com.squareup:kotlinpoet:0.5.0'
-//    compile "com.google.auto.service:auto-service:1.0-rc2"
-//    kapt    "com.google.auto.service:auto-service:1.0-rc2"
 }
 
 repositories {
