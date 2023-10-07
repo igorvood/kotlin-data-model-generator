@@ -29,12 +29,13 @@ class EntityEnumGenerator(
                     .map { it.shortName }
                     .sorted()
                     .joinToString(",\n")
-                val trimIndent = """
-            package $commonPackage
-            enum class MetaEntityEnum {
-            $entities
-            }
-        """.trimIndent()
+                val trimIndent =
+"""package $commonPackage
+
+enum class MetaEntityEnum {
+$entities
+}
+"""
                 setOf(GeneratedFile(FileName("MetaEntityEnum"), GeneratedCode(trimIndent)))
             }
         }
