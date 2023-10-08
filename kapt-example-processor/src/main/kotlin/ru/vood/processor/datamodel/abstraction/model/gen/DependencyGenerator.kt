@@ -28,8 +28,9 @@ class DependencyGenerator(
                 val trimIndent =
                     """package ${packageName.value}
                         
-import ${packageName.value}.DataDictionaryEntityEnum
-import ${packageName.value}.DataDictionaryForeignKeyEnum
+import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*
+import ${packageName.value}.${ForeignKeyEnumGenerator.foreignKeyEnumGeneratorNameClass}.*
+
 
 object Dependency {
 

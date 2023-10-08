@@ -19,7 +19,7 @@ class ColumnEntityEnumGenerator(
 ) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
-        get() = "DataDictionaryColumnEntityEnum"
+        get() = columnEntityEnumGeneratorNameClass
 
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         return when (generatedClassData.isEmpty()) {
@@ -40,7 +40,7 @@ class ColumnEntityEnumGenerator(
                 val trimIndent =
                     """package ${packageName.value}
                         
-import ${packageName.value}.DataDictionaryEntityEnum.*                        
+import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*                        
 import kotlin.reflect.KProperty1
 
 enum class $nameClass(
@@ -56,6 +56,10 @@ $entities
         }
 
 
+    }
+
+    companion object{
+        val columnEntityEnumGeneratorNameClass = "DataDictionaryColumnEntityEnum"
     }
 }
 

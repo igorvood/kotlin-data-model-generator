@@ -20,7 +20,7 @@ class UniqueKeyEnumGenerator(
     ) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
-        get() = "DataDictionaryUniqueKeyEnum"
+        get() = uniqueKeyEnumGeneratorNameClass
 
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         return when (generatedClassData.isEmpty()) {
@@ -46,7 +46,7 @@ class UniqueKeyEnumGenerator(
                 val trimIndent =
                     """package ${packageName.value}
                         
-import ${packageName.value}.DataDictionaryColumnEntityEnum.*
+import ${packageName.value}.${ColumnEntityEnumGenerator.columnEntityEnumGeneratorNameClass}.*
 
 enum class $nameClass(
     override val columns: Set<${IMetaColumnEntity::class.java.canonicalName}>
@@ -60,6 +60,10 @@ $entities
         }
 
 
+    }
+
+    companion object{
+        val uniqueKeyEnumGeneratorNameClass = "DataDictionaryUniqueKeyEnum"
     }
 
 }

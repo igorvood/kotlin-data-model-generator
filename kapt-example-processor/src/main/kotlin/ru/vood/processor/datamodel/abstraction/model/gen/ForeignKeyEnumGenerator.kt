@@ -21,7 +21,7 @@ class ForeignKeyEnumGenerator(
 ) : AbstractDataDictionaryGenerator<Set<MetaForeignKey>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
-        get() = "DataDictionaryForeignKeyEnum"
+        get() = foreignKeyEnumGeneratorNameClass
 
     override fun textGenerator(generatedClassData: Set<MetaForeignKey>): Set<GeneratedFile> {
         return when (generatedClassData.isEmpty()) {
@@ -40,8 +40,8 @@ class ForeignKeyEnumGenerator(
                 val trimIndent =
                     """package ${packageName.value}
                         
-import ${packageName.value}.DataDictionaryEntityEnum.*
-import ${packageName.value}.DataDictionaryUniqueKeyEnum.*
+import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*
+import ${packageName.value}.${UniqueKeyEnumGenerator.uniqueKeyEnumGeneratorNameClass}.*
 
 enum class $nameClass(
     override val fromEntity: ${IMetaEntity::class.java.canonicalName},
@@ -52,12 +52,14 @@ $entities
 }
 """
                 log(Diagnostic.Kind.NOTE, "Create $nameClass")
-                setOf(GeneratedFile(FileName("$nameClass"), GeneratedCode(trimIndent)))
+                setOf(GeneratedFile(FileName(nameClass), GeneratedCode(trimIndent)))
             }
         }
 
 
     }
 
-
+companion object{
+    val foreignKeyEnumGeneratorNameClass  = "DataDictionaryForeignKeyEnum"
+}
 }
