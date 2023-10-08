@@ -19,7 +19,7 @@ class EntityEnumGenerator(
 ) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
-        get() = "DataDictionaryEntityEnum"
+        get() = nameClassEntityEnumGenerator
 
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         return when (generatedClassData.isEmpty()) {
@@ -46,6 +46,10 @@ $entities
         }
 
 
+    }
+
+    companion object{
+        val nameClassEntityEnumGenerator = "DataDictionaryEntityEnum"
     }
 
 }

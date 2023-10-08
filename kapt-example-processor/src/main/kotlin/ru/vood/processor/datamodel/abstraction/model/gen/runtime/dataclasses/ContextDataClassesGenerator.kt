@@ -1,8 +1,11 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.intf.IContextOf
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
+import ru.vood.processor.datamodel.abstraction.model.gen.AbstractDataDictionaryGenerator
+import ru.vood.processor.datamodel.abstraction.model.gen.EntityEnumGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
@@ -45,7 +48,10 @@ class ContextDataClassesGenerator(
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}<ru.vood.datamodel.meta.runtime.dataclasses.$entityName>          
+): ${IContextOf::class.java.canonicalName}<ru.vood.datamodel.meta.runtime.dataclasses.$entityName>{
+override val metaEntity: ${IMetaEntity::class.java.canonicalName}
+        get() = ${rootPackage.value}${AbstractDataDictionaryGenerator.subPackageAbstractDataDictionaryGenerator.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.$dataClass
+}          
                     
                 """.trimIndent()
 

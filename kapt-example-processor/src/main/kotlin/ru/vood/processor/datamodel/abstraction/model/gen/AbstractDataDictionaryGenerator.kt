@@ -13,8 +13,12 @@ abstract class AbstractDataDictionaryGenerator<META>(
 ) : AbstractGenerator<META>(messager, processingEnv, rootPackage) {
 
     override val subPackage: PackageName
-        get() = PackageName("metaEnum")
+        get() = subPackageAbstractDataDictionaryGenerator
 
     abstract val nameClass: String
+
+    companion object{
+        val subPackageAbstractDataDictionaryGenerator = PackageName("metaEnum")
+    }
 
 }
