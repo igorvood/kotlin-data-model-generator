@@ -16,8 +16,6 @@ abstract class AbstractGenerator<META>(
 ) {
 
     abstract fun textGenerator(generatedClassData: META): Set<GeneratedFile>
-
-
     fun createFiles(generatedClassData: META) {
         textGenerator(generatedClassData)
             .forEach { genFile ->
