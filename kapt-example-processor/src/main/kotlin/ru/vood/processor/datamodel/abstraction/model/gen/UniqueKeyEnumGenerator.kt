@@ -1,5 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.IMetaColumnEntity
+import ru.vood.dmgen.intf.IMetaUkEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -45,7 +47,9 @@ class UniqueKeyEnumGenerator(
                         
 import $commonPackage.DataDictionaryColumnEntityEnum.*
 
-enum class $nameClass(val columns: Set<DataDictionaryColumnEntityEnum>) {
+enum class $nameClass(
+    override val columns: Set<${IMetaColumnEntity::class.java.canonicalName}>
+): ${IMetaUkEntity::class.java.canonicalName}{
 $entities
 }
 """
