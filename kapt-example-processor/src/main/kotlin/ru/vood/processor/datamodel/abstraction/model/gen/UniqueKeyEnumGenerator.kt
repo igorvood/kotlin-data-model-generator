@@ -61,34 +61,5 @@ $entities
 
     }
 
-    private fun calculatePackage(packages: List<String>): String {
-        fun d(packages: List<String>, currentPackage: String): String {
-            when (packages.size) {
-                0 -> currentPackage
-                else -> {
-                    val nextPackage = packages[0]
-
-                    currentPackage.withIndex()
-                        .map {
-
-                        }
-
-
-                    currentPackage
-                }
-            }
-
-
-            TODO()
-        }
-
-
-
-        return when (packages.size) {
-            0 -> error("Why package size is empty?")
-            1 -> packages[0]
-            else -> d(packages.drop(1), packages[0])
-        }
-    }
 }
 
