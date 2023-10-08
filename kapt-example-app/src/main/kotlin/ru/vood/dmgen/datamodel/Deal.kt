@@ -7,7 +7,7 @@ import ru.vood.dmgen.annotation.Pk
 @Comment("Это сущность Сделка")
 @FlowEntity
 //@Uk(["paramsList"])
-data class Deal(
+open class Deal(
     @Pk
     @Comment("Это ее идентификатор")
     val id: Int,

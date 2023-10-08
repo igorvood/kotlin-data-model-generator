@@ -31,7 +31,12 @@ class EntityDataClassesGenerator(
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.kotlinMetaClass.toString()
 
-                    "val ${col.name}: $kotlinMetaClass"
+                    col.comment
+                    """${col.comment?.let { """/**
+*$it
+*/
+""".trimIndent() }?:""}     
+val ${col.name}: $kotlinMetaClass""".trimIndent()
                 }
                     .joinToString(",\n")
 
