@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -33,8 +34,8 @@ class EntityEnumGenerator(
 import kotlin.reflect.KClass
 
 enum class $nameClass(
-val designkClass: KClass<*>
-) {
+override val designClass: KClass<*>
+): ${IMetaEntity::class.java.canonicalName} {
 $entities
 }
 """

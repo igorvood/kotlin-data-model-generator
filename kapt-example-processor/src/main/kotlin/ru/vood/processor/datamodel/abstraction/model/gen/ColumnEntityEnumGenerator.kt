@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -42,7 +43,7 @@ import $commonPackage.DataDictionaryEntityEnum.*
 import kotlin.reflect.KProperty1
 
 enum class $nameClass(
-val entity: DataDictionaryEntityEnum,
+val entity: ${IMetaEntity::class.java.canonicalName},
 val kProperty1: KProperty1<*, *>,
 ) {
 $entities

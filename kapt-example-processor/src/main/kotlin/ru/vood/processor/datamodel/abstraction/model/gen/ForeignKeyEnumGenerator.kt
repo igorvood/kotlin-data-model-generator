@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -40,8 +41,8 @@ import $commonPackage.DataDictionaryEntityEnum.*
 import $commonPackage.DataDictionaryUniqueKeyEnum.*
 
 enum class $nameClass(
-    val fromEntity: DataDictionaryEntityEnum,
-    val toEntity: DataDictionaryEntityEnum,
+    val fromEntity: ${IMetaEntity::class.java.canonicalName},
+    val toEntity: ${IMetaEntity::class.java.canonicalName},
     val uk: DataDictionaryUniqueKeyEnum
 ) {
 $entities

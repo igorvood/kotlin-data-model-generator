@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -31,18 +32,18 @@ import $commonPackage.DataDictionaryForeignKeyEnum
 
 object Dependency {
 
-    val entityDependency : Map<DataDictionaryEntityEnum, Set<MetaDependency>> = collectDependency(DataDictionaryEntityEnum.values().toList(), DataDictionaryForeignKeyEnum.values().toList())
+    val entityDependency : Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> = collectDependency(DataDictionaryEntityEnum.values().toList(), DataDictionaryForeignKeyEnum.values().toList())
 
 
     private fun collectDependency(
-        entities: List<DataDictionaryEntityEnum>,
+        entities: List<${IMetaEntity::class.java.canonicalName}>,
         foreignKey: List<DataDictionaryForeignKeyEnum>
-    ): Map<DataDictionaryEntityEnum, Set<MetaDependency>> {
+    ): Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> {
 
         tailrec fun recursiveCollectDependency(
             values: List<DataDictionaryForeignKeyEnum>,
-            collector: Map<DataDictionaryEntityEnum, Set<MetaDependency>>
-        ): Map<DataDictionaryEntityEnum, Set<MetaDependency>> {
+            collector: Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>>
+        ): Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> {
             return when (values.isEmpty()) {
                 true -> collector
                 false -> {
@@ -63,7 +64,7 @@ object Dependency {
     }
 }
 
-data class MetaDependency(val toEntity: DataDictionaryEntityEnum)
+data class MetaDependency(val toEntity: ${IMetaEntity::class.java.canonicalName})
 """
                 log(Diagnostic.Kind.NOTE, "Create $nameClass")
                 setOf(GeneratedFile(FileName("$nameClass"), GeneratedCode(trimIndent)))
