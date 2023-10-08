@@ -16,7 +16,7 @@ class ColumnEntityEnumGenerator(
     filer: Filer,
     processingEnv: ProcessingEnvironment
 
-) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, filer, processingEnv) {
+) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv) {
 
     override val nameClass: String
         get() = "DataDictionaryColumnEntityEnum"

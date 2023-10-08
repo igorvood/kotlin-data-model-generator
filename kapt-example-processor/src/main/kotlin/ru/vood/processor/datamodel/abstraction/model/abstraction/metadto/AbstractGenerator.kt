@@ -4,14 +4,12 @@ import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
 
 abstract class AbstractGenerator<META>(
     val messager: Messager,
-    val filer: Filer,
     val processingEnv: ProcessingEnvironment
 ) {
 

@@ -10,7 +10,7 @@ abstract class AbstractDataClassGenerator<META>(
      filer: Filer,
      processingEnv: ProcessingEnvironment
 
-): AbstractGenerator<META>(messager, filer, processingEnv) {
+): AbstractGenerator<META>(messager, processingEnv) {
 
     override val subDir: String
         get() = "metaEnum"

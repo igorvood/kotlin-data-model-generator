@@ -16,7 +16,7 @@ class ContextDataClassesGenerator(
     filer: Filer,
     processingEnv: ProcessingEnvironment
 
-) : AbstractGenerator<Set<MetaEntity>>(messager, filer, processingEnv) {
+) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv) {
 
     private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses.context"//calculatePackage(packages)
 

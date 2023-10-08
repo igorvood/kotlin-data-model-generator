@@ -17,7 +17,7 @@ class ForeignKeyEnumGenerator(
     filer: Filer,
     processingEnv: ProcessingEnvironment
 
-) : AbstractDataDictionaryGenerator<Set<MetaForeignKey>>(messager, filer, processingEnv) {
+) : AbstractDataDictionaryGenerator<Set<MetaForeignKey>>(messager, processingEnv) {
 
     override val nameClass: String
         get() = "DataDictionaryForeignKeyEnum"
