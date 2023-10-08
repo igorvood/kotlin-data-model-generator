@@ -1,6 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
-import ru.vood.dmgen.intf.IContextOf
+import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -40,13 +40,12 @@ class EntityDataClassesGenerator(
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}                    
+): ${IEntity::class.java.canonicalName}                    
                     
                 """.trimIndent()
 
                 log(Diagnostic.Kind.NOTE, "Create $fullClassName")
-                GeneratedFile(FileName( fullClassName), GeneratedCode( code))
-
+                GeneratedFile(FileName(fullClassName), GeneratedCode(code))
 
 
             }.toSet()

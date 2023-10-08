@@ -28,6 +28,7 @@ class ContextDataClassesGenerator(
             }
             .map { contextData ->
                 val dataClass = contextData.first.name
+                val entityName = """${dataClass}Entity"""
                 val contextName = contextData.second.key.name
                 val columns = contextData.second.value.sortedBy { it.name }
 
@@ -44,7 +45,7 @@ class ContextDataClassesGenerator(
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}                    
+): ${IContextOf::class.java.canonicalName}<ru.vood.datamodel.meta.runtime.dataclasses.$entityName>          
                     
                 """.trimIndent()
 

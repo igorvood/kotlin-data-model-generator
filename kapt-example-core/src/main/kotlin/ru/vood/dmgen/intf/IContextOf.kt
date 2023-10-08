@@ -1,4 +1,4 @@
 package ru.vood.dmgen.intf
 
-interface IContextOf {
+interface IContextOf<ENT: IEntity> {
 }
