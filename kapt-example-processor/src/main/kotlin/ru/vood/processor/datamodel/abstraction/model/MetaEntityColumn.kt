@@ -12,7 +12,9 @@ class MetaEntityColumn(
     element: Element
 ) : AbstractField(element) {
 
-    val comment: String? = element.annotation<Comment>().map { it.comment }.orElse(null)
+    val comment: String? = element.annotation<Comment>().map {
+        it.comment
+    }.orElse(null)
     override fun isNullable(): Boolean {
         return element.asType().asTypeName().isNullable
     }

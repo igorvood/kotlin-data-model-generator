@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.ColumnName
 import ru.vood.dmgen.intf.IMetaColumnEntity
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
@@ -30,7 +31,9 @@ class ColumnEntityEnumGenerator(
                         .map { f->
                             """${ent.shortName}_${f.name}(
                                 |${ent.shortName},
-                                |${ent.kotlinMetaClass.canonicalName}::${f.name}
+                                |${ent.kotlinMetaClass.canonicalName}::${f.name},
+                                |${ColumnName::class.java.canonicalName}("${ent.shortName}"),
+                                |"${f.comment}"
                                 |)""".trimMargin()
                         }
                     }
@@ -46,6 +49,8 @@ import kotlin.reflect.KProperty1
 enum class $nameClass(
     override val entity: ${IMetaEntity::class.java.canonicalName},
     override val kProperty1: KProperty1<*, *>,
+    override val columnName: ${ColumnName::class.java.canonicalName},
+    override val comment: String,
 ): ${IMetaColumnEntity::class.java.canonicalName} {
 $entities
 }
