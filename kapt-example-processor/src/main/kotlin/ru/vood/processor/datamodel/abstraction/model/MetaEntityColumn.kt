@@ -19,11 +19,11 @@ class MetaEntityColumn(
         return element.asType().asTypeName().isNullable
     }
 
-    val inPk: Boolean by lazy {
+    val inPk: Boolean =
         element.annotation<Pk>()
             .map { true }
             .orElse(false)
-    }
+
 
 
 }
