@@ -1,6 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
+import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -10,7 +11,8 @@ import javax.tools.Diagnostic
 
 abstract class AbstractGenerator<META>(
     val messager: Messager,
-    val processingEnv: ProcessingEnvironment
+    val processingEnv: ProcessingEnvironment,
+    val rootPackage: PackageName
 ) {
 
     abstract fun textGenerator(generatedClassData: META): Set<GeneratedFile>

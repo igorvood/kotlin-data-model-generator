@@ -6,17 +6,17 @@ import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
-import javax.annotation.processing.Filer
+import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
 
 class ColumnEntityEnumGenerator(
     messager: Messager,
-    filer: Filer,
-    processingEnv: ProcessingEnvironment
+    processingEnv: ProcessingEnvironment,
+    rootPackage: PackageName
 
-) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv) {
+) : AbstractDataDictionaryGenerator<Set<MetaEntity>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
         get() = "DataDictionaryColumnEntityEnum"

@@ -5,6 +5,7 @@ import ru.vood.processor.datamodel.abstraction.model.*
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
 import ru.vood.processor.datamodel.abstraction.model.gen.*
+import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
 import ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses.ContextDataClassesGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses.EntityDataClassesGenerator
 import java.util.*
@@ -50,16 +51,20 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
 
         val setMetaEnt = metaInformation.entities.map { it.value }.toSet()
         if (setMetaEnt.isNotEmpty()) {
-            val cmmomPackage: String = commonPackage(setMetaEnt)
-            EntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-            DependencyGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            val rootPackage = PackageName(commonPackage(setMetaEnt))
+            EntityEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            DependencyGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
 
-            ColumnEntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-            UniqueKeyEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-            ForeignKeyEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.collectMetaForeignKey)
+            ColumnEntityEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            UniqueKeyEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            ForeignKeyEnumGenerator(
+                messager,
+                processingEnv,
+                rootPackage
+            ).createFiles(metaInformation.collectMetaForeignKey)
 
-            ContextDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-            EntityDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            ContextDataClassesGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            EntityDataClassesGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
         }
 
 
@@ -69,25 +74,25 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
     }
 
     fun commonPackage(setMetaEnt: Set<MetaEntity>): String {
-        tailrec fun commonPackageRecurcive(currentPackage: String, packacges: List<String>):String{
-            return when(packacges.isEmpty()){
+        tailrec fun commonPackageRecurcive(currentPackage: String, packacges: List<String>): String {
+            return when (packacges.isEmpty()) {
                 true -> currentPackage
                 false -> {
                     val nextPack = packacges[0]
 
-                    var collector= ""
+                    var collector = ""
 
-                    for (q in nextPack.withIndex()){
-                        if (currentPackage.getOrElse(q.index) { '~' } == q.value){
+                    for (q in nextPack.withIndex()) {
+                        if (currentPackage.getOrElse(q.index) { '~' } == q.value) {
                             collector = collector.plus(q.value)
-                        } else{
+                        } else {
                             break
                         }
 
 
                     }
 
-                    if (collector.isEmpty()){
+                    if (collector.isEmpty()) {
                         println(1)
                     }
 
@@ -97,6 +102,7 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
             }
 
         }
+
         val toList = setMetaEnt.toList().map { it.kotlinMetaClass.toString() }
         val value = toList[0]
         return commonPackageRecurcive(value, toList.drop(1))

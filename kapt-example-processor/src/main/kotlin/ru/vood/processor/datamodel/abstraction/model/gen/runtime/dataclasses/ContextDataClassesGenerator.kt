@@ -6,6 +6,7 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.Abstrac
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
+import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
 import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
@@ -13,10 +14,10 @@ import javax.tools.Diagnostic
 
 class ContextDataClassesGenerator(
     messager: Messager,
-    filer: Filer,
-    processingEnv: ProcessingEnvironment
+    processingEnv: ProcessingEnvironment,
+    rootPackage: PackageName
 
-) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv) {
+) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv,rootPackage) {
 
     private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses.context"//calculatePackage(packages)
 

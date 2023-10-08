@@ -11,3 +11,6 @@ value class FileName(val value: String)
 
 @JvmInline
 value class GeneratedCode(val value: String)
+
+@JvmInline
+value class PackageName(val value: String)
