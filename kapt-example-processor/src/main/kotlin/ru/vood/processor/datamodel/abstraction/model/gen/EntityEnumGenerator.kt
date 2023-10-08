@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.intf.EntityName
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -26,7 +27,7 @@ class EntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { it.shortName + "(${it.kotlinMetaClass.canonicalName}::class)" }
+                    .map { """${it.shortName}(${it.kotlinMetaClass.canonicalName}::class, ${EntityName::class.java.canonicalName}("${it.shortName}"), "${it.comment}")""" }
                     .sorted()
                     .joinToString(",\n")
 
@@ -35,7 +36,10 @@ class EntityEnumGenerator(
 import kotlin.reflect.KClass
 
 enum class $nameClass(
-override val designClass: KClass<*>
+override val designClass: KClass<*>,
+override val entityName: ${EntityName::class.java.canonicalName},
+override val comment: String
+
 ): ${IMetaEntity::class.java.canonicalName} {
 $entities
 }
