@@ -1,9 +1,6 @@
 package ru.vood.dmgen.datamodel
 
-import ru.vood.dmgen.annotation.FlowEntity
-import ru.vood.dmgen.annotation.ForeignKey
-import ru.vood.dmgen.annotation.Pk
-import ru.vood.dmgen.annotation.Uk
+import ru.vood.dmgen.annotation.*
 import java.math.BigDecimal
 import java.time.Instant
 
@@ -14,7 +11,8 @@ import java.time.Instant
     kClass = "ru.vood.dmgen.datamodel.Deal",
     "Product_FK_1",
     currentTypeCols = ["dealId"],
-    outTypeCols = ["id"]
+    outTypeCols = ["id"],
+    cols = [ForeignKeyColumns("dealId", "id")]
 )
 @Uk("Product_UK_1",
     ["otherSystemProductId", "dealId"])
