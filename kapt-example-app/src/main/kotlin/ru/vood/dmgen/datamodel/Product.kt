@@ -19,7 +19,7 @@ import java.time.Instant
 @Uk("Product_UK_1",
     ["otherSystemProductId", "dealId"])
 //@Uk("Product_UK_2",["dealId", "id"])
-@Uk("Product_UK_3",["l", "d", "f", "bd", "b", "t"])
+//@Uk("Product_UK_3",["l", "d", "f", "bd", "b", "t"])
 data class Product(
     @Pk
     val id: String,
@@ -34,7 +34,7 @@ data class Product(
     val l: Long,
     val d: Double,
     val f: Float,
-    val bd: BigDecimal,
+//    val bd: BigDecimal,
     val b: Boolean,
-    val t: Instant,
+//    val t: Instant,
 )
