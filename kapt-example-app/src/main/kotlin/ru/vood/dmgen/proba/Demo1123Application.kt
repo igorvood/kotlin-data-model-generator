@@ -1,8 +1,12 @@
 package ru.vood.dmgen.proba
 
 import kotlinx.serialization.Serializable
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import ru.vood.datamodel.meta.enums.*
 
+
+@SpringBootApplication
+class Demo1123Application
 
 fun main() {
     println(DataDictionaryEntityEnum.DealParam)
