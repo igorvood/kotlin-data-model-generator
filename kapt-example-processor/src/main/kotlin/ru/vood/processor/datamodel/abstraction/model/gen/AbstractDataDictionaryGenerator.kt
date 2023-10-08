@@ -12,8 +12,8 @@ abstract class AbstractDataDictionaryGenerator<META>(
 
 ) : AbstractGenerator<META>(messager, processingEnv, rootPackage) {
 
-    override val subDir: String
-        get() = "metaEnum"
+    override val subPackage: PackageName
+        get() = PackageName("metaEnum")
 
     val commonPackage: String = "ru.vood.datamodel.meta.enums"//calculatePackage(packages)
 

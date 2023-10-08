@@ -7,7 +7,6 @@ import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
-import javax.annotation.processing.Filer
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
@@ -61,6 +60,6 @@ $joinToString
         return map
     }
 
-    override val subDir: String
-        get() = "runtime.dataclasses.context"
+    override val subPackage: PackageName
+        get() = PackageName("runtime.dataclasses.context")
 }

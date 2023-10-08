@@ -32,11 +32,15 @@ abstract class AbstractGenerator<META>(
         processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]!!
     }
 
-    abstract val subDir: String
+    abstract val subPackage: PackageName
 
+    private val subDir by lazy {
+        (rootPackage.value+"."+subPackage.value)
+            .replace(".", "/")
+    }
 
     val generationDirectory by lazy {
-        kaptKotlinGeneratedDir +"/"+ subDir
+        "$kaptKotlinGeneratedDir/$subDir"
     }
 
     protected fun log(kind: Diagnostic.Kind, msg: CharSequence?) {
