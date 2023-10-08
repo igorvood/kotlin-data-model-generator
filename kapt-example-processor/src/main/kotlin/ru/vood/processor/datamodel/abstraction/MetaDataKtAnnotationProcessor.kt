@@ -49,18 +49,57 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
             }
 
         val setMetaEnt = metaInformation.entities.map { it.value }.toSet()
-        EntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-        DependencyGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+        if (setMetaEnt.isNotEmpty()) {
+            val cmmomPackage: String = commonPackage(setMetaEnt)
+            EntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            DependencyGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
 
-        ColumnEntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-        UniqueKeyEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-        ForeignKeyEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.collectMetaForeignKey)
+            ColumnEntityEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            UniqueKeyEnumGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            ForeignKeyEnumGenerator(messager, filer, processingEnv).createFiles(metaInformation.collectMetaForeignKey)
 
-        ContextDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
-        EntityDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            ContextDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+            EntityDataClassesGenerator(messager, filer, processingEnv).createFiles(setMetaEnt)
+        }
+
+
 
         return true
 
+    }
+
+    fun commonPackage(setMetaEnt: Set<MetaEntity>): String {
+        tailrec fun commonPackageRecurcive(currentPackage: String, packacges: List<String>):String{
+            return when(packacges.isEmpty()){
+                true -> currentPackage
+                false -> {
+                    val nextPack = packacges[0]
+
+                    var collector= ""
+
+                    for (q in nextPack.withIndex()){
+                        if (currentPackage.getOrElse(q.index) { '~' } == q.value){
+                            collector = collector.plus(q.value)
+                        } else{
+                            break
+                        }
+
+
+                    }
+
+                    if (collector.isEmpty()){
+                        println(1)
+                    }
+
+
+                    commonPackageRecurcive(collector, packacges.drop(1))
+                }
+            }
+
+        }
+        val toList = setMetaEnt.toList().map { it.kotlinMetaClass.toString() }
+        val value = toList[0]
+        return commonPackageRecurcive(value, toList.drop(1))
     }
 
 
