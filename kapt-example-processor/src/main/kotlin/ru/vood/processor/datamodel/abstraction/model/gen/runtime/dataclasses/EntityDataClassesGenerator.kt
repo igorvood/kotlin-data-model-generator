@@ -36,7 +36,10 @@ class EntityDataClassesGenerator(
 
                 val fullClassName = """${dataClass}Entity"""
                 val code = """package $commonPackage
-                    
+${contextData.comment?.let { """/**
+*$it
+*/
+""".trimIndent() }?:""}                    
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString

@@ -1,8 +1,10 @@
 package ru.vood.processor.datamodel.abstraction.model
 
+import ru.vood.dmgen.annotation.Comment
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Uk
+import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractAnnotatedClass
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
 import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
@@ -13,6 +15,8 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
         MetaEntityColumn(e)
 
     val flowEntity = element.necessaryAnnotation<FlowEntity>()
+
+    val comment: String? = element.annotation<Comment>().map { it.comment }.orElse(null)
 
     val foreignKeysAnnotations = element.annotations<ForeignKey>()
 
