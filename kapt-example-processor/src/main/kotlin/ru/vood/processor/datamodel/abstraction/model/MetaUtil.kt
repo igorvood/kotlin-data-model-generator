@@ -92,7 +92,8 @@ fun collectMetaForeignKey(
                     b
                 }
             val ukDto = if (uks.size != 1) {
-                error("""У сущности ${currentClass.value} 
+                error(
+                    """У сущности ${currentClass.value} 
                     для внешнего ключа $foreignKey 
                     во внешней таблице должен быть строго один уникальный ключ
                     список подходящих ключей-> ${uks.map { it.key.name.value }}"""
@@ -107,9 +108,9 @@ fun collectMetaForeignKey(
                 .toSet()
 
 
-
             val element =
-                MetaForeignKey(ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols,
+                MetaForeignKey(
+                    ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols,
                     ukDto
                 )
 
@@ -134,12 +135,12 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
 
     val map = entities.flatMap { it.value.uniqueKeysFields.entries.map { w -> w.key.name to it.key } }
         .groupBy { it.first.value }
-        .filter { it.value.size>1 }
-        .map { "dublicate uk name ${it.key} for entities ${it.value.map { w->w.second.value }}" }
+        .filter { it.value.size > 1 }
+        .map { "dublicate uk name ${it.key} for entities ${it.value.map { w -> w.second.value }}" }
 
-if (map.isNotEmpty()){
-    error(map)
-}
+    if (map.isNotEmpty()) {
+        error(map)
+    }
 
     val groupBy =
         entities.map { it.key to it.value.name }
@@ -168,7 +169,7 @@ if (map.isNotEmpty()){
             .map { "dublicate FK name ${it.key.value} in enties: ${it.value.map { q -> q.second }}" }
             .joinToString("\n")
 
-    if (dublicatetdFkName.isNotEmpty()){
+    if (dublicatetdFkName.isNotEmpty()) {
         error(dublicatetdFkName)
     }
 //    assert(dublicatetdFkName.isNotEmpty()) { dublicatetdFkName }
