@@ -1,14 +1,16 @@
-package ru.vood.dmgen.proba
+package ru.vood
 
 import kotlinx.serialization.Serializable
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 import ru.vood.datamodel.meta.enums.*
+import ru.vood.dmgen.datamodel.Deal
 
 
 @SpringBootApplication
 class Demo1123Application
 
-fun main() {
+fun main(args: Array<String>)  {
     println(DataDictionaryEntityEnum.DealParam)
     println(DataDictionaryForeignKeyEnum.Product_FK_1)
     println(DataDictionaryUniqueKeyEnum.DealParam_PK)
@@ -16,7 +18,7 @@ fun main() {
     println("============================")
 //
     Dependency.entityDependency.entries.forEach { println(it) }
-
+    runApplication<Demo1123Application>(*args)
 }
 
 
@@ -27,4 +29,4 @@ abstract sealed class EntityContext<ENTITY>{
 //    }
 }
 @Serializable
-data class DealParamEntityContext(val id: String): EntityContext<ru.vood.dmgen.datamodel.Deal>()
+data class DealParamEntityContext(val id: String): EntityContext<Deal>()
