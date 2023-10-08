@@ -1,6 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
 import ru.vood.dmgen.intf.IMetaEntity
+import ru.vood.dmgen.intf.IMetaFkEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -34,16 +35,16 @@ import ${packageName.value}.${ForeignKeyEnumGenerator.foreignKeyEnumGeneratorNam
 
 object Dependency {
 
-    val entityDependency : Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> = collectDependency(DataDictionaryEntityEnum.values().toList(), DataDictionaryForeignKeyEnum.values().toList())
+    val entityDependency : Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> = collectDependency(${EntityEnumGenerator.nameClassEntityEnumGenerator}.values().toList(), ${ForeignKeyEnumGenerator.foreignKeyEnumGeneratorNameClass}.values().toList())
 
 
     private fun collectDependency(
         entities: List<${IMetaEntity::class.java.canonicalName}>,
-        foreignKey: List<DataDictionaryForeignKeyEnum>
+        foreignKey: List<${IMetaFkEntity::class.java.canonicalName}>
     ): Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> {
 
         tailrec fun recursiveCollectDependency(
-            values: List<DataDictionaryForeignKeyEnum>,
+            values: List<${IMetaFkEntity::class.java.canonicalName}>,
             collector: Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>>
         ): Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> {
             return when (values.isEmpty()) {
