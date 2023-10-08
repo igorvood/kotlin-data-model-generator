@@ -39,7 +39,7 @@ class ContextDataClassesGenerator(
                 }
                     .joinToString(",\n")
 
-                val fullClassName = """Context${dataClass}${contextName.value}"""
+                val fullClassName = """${dataClass}Context${contextName.value}"""
                 val code = """package $commonPackage
                     
 @kotlinx.serialization.Serializable
