@@ -58,15 +58,22 @@ fun collectMetaForeignKey(
         false -> {
             val head = elementsAnnotatedWith.first()
             val foreignKey = head.first
+
             val currentClass = head.second
             val foreignClass = ModelClassName(foreignKey.kClass)
-            val fromCols = metaEntityColumns(entities, currentClass, foreignKey.currentTypeCols, currentClass)
+
+            val fromCols = metaEntityColumns(
+                entities = entities,
+                entity = currentClass,
+                cols = foreignKey.currentTypeCols,//foreignKey.cols.map { q -> q.currentTypeCol }.toTypedArray(),
+                currentClass = currentClass
+            )
 
             val toCols = metaEntityColumns(
                 entities = entities,
                 entity = foreignClass,
                 currentClass = currentClass,
-                cols = foreignKey.outTypeCols
+                cols = foreignKey.outTypeCols//foreignKey.cols.map { q -> q.outTypeCol }.toTypedArray()
             )
 
             if (fromCols.size != toCols.size) {
