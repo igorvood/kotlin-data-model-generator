@@ -21,8 +21,6 @@ class ContextDataClassesGenerator(
 
 ) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv,rootPackage) {
 
-    private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses.context"//calculatePackage(packages)
-
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         val map = generatedClassData
             .flatMap { metaEntity ->
@@ -43,12 +41,12 @@ class ContextDataClassesGenerator(
                     .joinToString(",\n")
 
                 val fullClassName = """${dataClass}Context${contextName.value}"""
-                val code = """package $commonPackage
+                val code = """package ${packageName.value}
                     
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}<ru.vood.datamodel.meta.runtime.dataclasses.$entityName>{
+): ${IContextOf::class.java.canonicalName}<${rootPackage.value}${EntityDataClassesGenerator.entityDataClassesGeneratorPackageName.value}.$entityName>{
 override val metaEntity: ${IMetaEntity::class.java.canonicalName}
         get() = ${rootPackage.value}${AbstractDataDictionaryGenerator.subPackageAbstractDataDictionaryGenerator.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.$dataClass
 }          
@@ -67,5 +65,9 @@ override val metaEntity: ${IMetaEntity::class.java.canonicalName}
     }
 
     override val subPackage: PackageName
-        get() = PackageName("runtime.dataclasses.context")
+        get() = contextDataClassesGeneratorPackageName
+
+    companion object{
+        val contextDataClassesGeneratorPackageName = PackageName("runtime.dataclasses.context")
+    }
 }

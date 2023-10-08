@@ -19,8 +19,6 @@ class EntityDataClassesGenerator(
 
 ) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv,rootPackage) {
 
-    private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses"//calculatePackage(packages)
-
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         val map = generatedClassData
             .map { contextData ->
@@ -41,7 +39,7 @@ val ${col.name}: $kotlinMetaClass""".trimIndent()
                     .joinToString(",\n")
 
                 val fullClassName = """${dataClass}Entity"""
-                val code = """package $commonPackage
+                val code = """package ${packageName.value}
 ${contextData.comment?.let { """/**
 *$it
 */
@@ -64,5 +62,9 @@ $joinToString
     }
 
     override val subPackage: PackageName
-        get() = PackageName("runtime.dataclasses")
+        get() = entityDataClassesGeneratorPackageName
+
+    companion object{
+        val entityDataClassesGeneratorPackageName = PackageName("runtime.dataclasses")
+    }
 }
