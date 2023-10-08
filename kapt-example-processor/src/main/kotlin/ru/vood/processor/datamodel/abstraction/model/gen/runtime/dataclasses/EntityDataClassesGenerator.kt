@@ -11,25 +11,21 @@ import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
 
-class ContextDataClassesGenerator(
+class EntityDataClassesGenerator(
     messager: Messager,
     filer: Filer,
     processingEnv: ProcessingEnvironment
 
 ) : AbstractGenerator<Set<MetaEntity>>(messager, filer, processingEnv) {
 
-    private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses.context"//calculatePackage(packages)
+    private val commonPackage = "ru.vood.datamodel.meta.runtime.dataclasses"//calculatePackage(packages)
 
     override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
         val map = generatedClassData
-            .flatMap { metaEntity ->
-                metaEntity.uniqueKeysFields
-                    .map { ukData -> metaEntity to ukData }
-            }
             .map { contextData ->
-                val dataClass = contextData.first.name
-                val contextName = contextData.second.key.name
-                val columns = contextData.second.value.sortedBy { it.name }
+                val dataClass = contextData.name
+
+                val columns = contextData.fields.sortedBy { it.name }
 
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.kotlinMetaClass.toString()
@@ -38,7 +34,7 @@ class ContextDataClassesGenerator(
                 }
                     .joinToString(",\n")
 
-                val fullClassName = """Context${dataClass}${contextName.value}"""
+                val fullClassName = """${dataClass}Entity"""
                 val code = """package $commonPackage
                     
 @kotlinx.serialization.Serializable
@@ -60,5 +56,5 @@ $joinToString
     }
 
     override val subDir: String
-        get() = "runtime.dataclasses.context"
+        get() = "runtime.dataclasses"
 }

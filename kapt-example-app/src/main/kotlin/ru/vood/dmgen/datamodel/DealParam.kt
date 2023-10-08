@@ -8,5 +8,5 @@ import java.time.LocalDateTime
 data class DealParam(
     @Pk
     val id: Int,
-    val paramDate: LocalDateTime
+    val paramDate: String
     )
