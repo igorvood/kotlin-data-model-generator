@@ -2,7 +2,8 @@ package ru.vood.spring.fabric
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import ru.vood.datamodel.meta.enums.DataDictionaryEntityEnum
+import ru.vood.dmgen.datamodel.metaEnum.DataDictionaryEntityEnum
+
 import javax.annotation.PostConstruct
 import kotlin.reflect.KClass
 

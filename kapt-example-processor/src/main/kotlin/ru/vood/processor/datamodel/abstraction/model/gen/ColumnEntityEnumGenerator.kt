@@ -38,9 +38,9 @@ class ColumnEntityEnumGenerator(
                     .joinToString(",\n")
 
                 val trimIndent =
-                    """package $commonPackage
+                    """package ${packageName.value}
                         
-import $commonPackage.DataDictionaryEntityEnum.*                        
+import ${packageName.value}.DataDictionaryEntityEnum.*                        
 import kotlin.reflect.KProperty1
 
 enum class $nameClass(

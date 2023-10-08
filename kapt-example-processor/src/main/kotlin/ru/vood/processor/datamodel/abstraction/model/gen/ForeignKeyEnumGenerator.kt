@@ -38,10 +38,10 @@ class ForeignKeyEnumGenerator(
                     .joinToString(",\n")
 
                 val trimIndent =
-                    """package $commonPackage
+                    """package ${packageName.value}
                         
-import $commonPackage.DataDictionaryEntityEnum.*
-import $commonPackage.DataDictionaryUniqueKeyEnum.*
+import ${packageName.value}.DataDictionaryEntityEnum.*
+import ${packageName.value}.DataDictionaryUniqueKeyEnum.*
 
 enum class $nameClass(
     override val fromEntity: ${IMetaEntity::class.java.canonicalName},

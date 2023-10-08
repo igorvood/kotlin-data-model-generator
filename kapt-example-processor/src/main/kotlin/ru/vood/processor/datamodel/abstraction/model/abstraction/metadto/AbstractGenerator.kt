@@ -34,8 +34,10 @@ abstract class AbstractGenerator<META>(
 
     abstract val subPackage: PackageName
 
+    val packageName = PackageName(rootPackage.value  + subPackage.value)
+
     private val subDir by lazy {
-        (rootPackage.value+"."+subPackage.value)
+        (rootPackage.value + "." + subPackage.value)
             .replace(".", "/")
     }
 

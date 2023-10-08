@@ -31,7 +31,7 @@ class EntityEnumGenerator(
                     .joinToString(",\n")
 
                 val trimIndent =
-                    """package $commonPackage
+                    """package ${packageName.value}
 import kotlin.reflect.KClass
 
 enum class $nameClass(

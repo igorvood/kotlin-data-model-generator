@@ -26,10 +26,10 @@ class DependencyGenerator(
             true -> setOf()
             false -> {
                 val trimIndent =
-                    """package $commonPackage
+                    """package ${packageName.value}
                         
-import $commonPackage.DataDictionaryEntityEnum
-import $commonPackage.DataDictionaryForeignKeyEnum
+import ${packageName.value}.DataDictionaryEntityEnum
+import ${packageName.value}.DataDictionaryForeignKeyEnum
 
 object Dependency {
 

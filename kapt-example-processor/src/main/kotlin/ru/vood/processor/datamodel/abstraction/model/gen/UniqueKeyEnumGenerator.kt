@@ -44,9 +44,9 @@ class UniqueKeyEnumGenerator(
                     .joinToString(",\n")
 
                 val trimIndent =
-                    """package $commonPackage
+                    """package ${packageName.value}
                         
-import $commonPackage.DataDictionaryColumnEntityEnum.*
+import ${packageName.value}.DataDictionaryColumnEntityEnum.*
 
 enum class $nameClass(
     override val columns: Set<${IMetaColumnEntity::class.java.canonicalName}>
