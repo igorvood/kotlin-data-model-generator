@@ -28,6 +28,15 @@ data class Product(
 
     val productName: String,
 
+    val inn : Int?,
+
+    val ln: Long?,
+    val dn: Double?,
+    val fn: Float?,
+//    val bd: BigDecimal,
+    val bn: Boolean?,
+//    val t: Instant,
+
 
     val l: Long,
     val d: Double,

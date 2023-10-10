@@ -12,6 +12,7 @@ abstract class Deal(
     @Comment("Это ее идентификатор")
     val id: Int,
 
+
 //    val paramsSet: DealParam,
 //    val paramsList: List<DealParam>
 )
