@@ -16,6 +16,19 @@ class MetaEntityColumn(
         it.comment
     }.orElse(null)
     override fun isNullable(): Boolean {
+        val asType = element.asType()
+
+        val asTypeName = asType.asTypeName()
+        val kind = asType.kind
+
+
+        val annotations = asTypeName.annotations
+        val annotationMirrors = asType.annotationMirrors
+
+        if (annotations.isNotEmpty()) {
+             annotations.get(0).typeName
+        }
+
         return element.asType().asTypeName().isNullable
     }
 

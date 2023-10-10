@@ -29,12 +29,13 @@ class EntityDataClassesGenerator(
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.kotlinMetaClass.toString()
 
-                    col.comment
+                    col.element
+                    val nullableSymbol = if (col.isNullable()) "?" else ""
                     """${col.comment?.let { """/**
 *$it
 */
 """.trimIndent() }?:""}     
-val ${col.name}: $kotlinMetaClass""".trimIndent()
+val ${col.name}: $kotlinMetaClass$nullableSymbol""".trimIndent()
                 }
                     .joinToString(",\n")
 

@@ -1,6 +1,7 @@
 package ru.vood.dmgen.datamodel
 
 import ru.vood.dmgen.annotation.*
+import ru.vood.dmgen.datamodel.s.D
 import java.math.BigDecimal
 import java.time.Instant
 
@@ -29,6 +30,9 @@ data class Product(
     val productName: String,
 
     val inn : Int?,
+
+    val D: D,
+    val Dn: D?,
 
     val ln: Long?,
     val dn: Double?,
