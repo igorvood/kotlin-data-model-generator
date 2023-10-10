@@ -28,7 +28,7 @@ data class ProductPayments(
     val dealId: Int,
 
     @Pk
-    val id: String?,
+    val id: String,
 
     val summa: Long
 
