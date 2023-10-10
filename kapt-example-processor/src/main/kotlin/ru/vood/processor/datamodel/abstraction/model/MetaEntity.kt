@@ -22,9 +22,18 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
 
     val uniqueKeysAnnotations = element.annotations<Uk>()
 
-    val pkColumns =
-        UkDto(UkName(shortName+"_PK"),fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()) to fields.filter { it.inPk }
+    val pkColumns by lazy {
 
+        val pkCols = fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()
+        val notNullPkCols = fields.filter { it.inPk && !it.isNullable() }.map { ColumnName(it.name) }.toSet()
+
+        val minus = pkCols.minus(notNullPkCols.toSet())
+        if (minus.isNotEmpty()){
+            error("Entity ${kotlinMetaClass.toString()} contains nullable columns in PK ${minus}")
+        }
+
+        UkDto(UkName(shortName+"_PK"), pkCols) to fields.filter { it.inPk }
+    }
     val uniqueKeysFields: Map<UkDto, List<MetaEntityColumn>> by lazy {
         val allUk = uniqueKeysAnnotations
             .map { anno ->
