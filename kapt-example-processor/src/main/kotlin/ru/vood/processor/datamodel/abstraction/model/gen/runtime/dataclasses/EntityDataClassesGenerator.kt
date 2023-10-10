@@ -27,7 +27,7 @@ class EntityDataClassesGenerator(
                 val columns = contextData.fields.sortedBy { it.position }
 
                 val joinToString = columns.map { col ->
-                    val kotlinMetaClass = col.kotlinMetaClass.toString()
+                    val kotlinMetaClass = col.type
 
                     col.element
                     val nullableSymbol = if (col.isNullable()) "?" else ""

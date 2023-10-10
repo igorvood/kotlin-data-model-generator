@@ -9,7 +9,7 @@ import javax.lang.model.element.Element
 
 abstract class AbstractField(val element: Element) {
 
-    val kotlinMetaClass = fold({ it }, { it })
+    protected val kotlinMetaClass = fold({ it }, { it })
     protected inline fun <reified T> fold(
         classNameF: (ClassName) -> T,
         parameterizedTypeNameF: (ParameterizedTypeName) -> T,
@@ -25,7 +25,16 @@ abstract class AbstractField(val element: Element) {
 
     abstract fun isNullable(): Boolean
 
-    val type: String = element.asType().toString()
+    val type: String = when(val t = kotlinMetaClass.toString()){
+            "java.lang.Long" -> "Long"
+        "java.lang.Double" -> "Double"
+        "java.lang.Float" -> "Float"
+        "java.lang.Boolean" -> "Boolean"
+        "java.lang.String" -> "String"
+        "java.lang.Integer" -> "Int"
+
+        else -> t
+    }
 
     val typeCollection by lazy {
         val fold = fold(

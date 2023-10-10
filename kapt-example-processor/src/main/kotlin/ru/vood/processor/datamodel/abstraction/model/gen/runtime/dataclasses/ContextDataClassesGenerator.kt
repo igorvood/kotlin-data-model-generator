@@ -34,7 +34,7 @@ class ContextDataClassesGenerator(
                 val columns = contextData.second.value.sortedBy { it.name }
 
                 val joinToString = columns.map { col ->
-                    val kotlinMetaClass = col.kotlinMetaClass.toString()
+                    val kotlinMetaClass = col.type
 
                     "val ${col.name}: $kotlinMetaClass"
                 }

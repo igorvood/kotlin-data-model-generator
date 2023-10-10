@@ -89,6 +89,13 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
             "boolean",
             "java.time.Instant",
             "java.math.BigDecimal",
+            "kotlin.Int",
+            "Long",
+            "Float",
+            "Double",
+            "String",
+            "Boolean",
+            "Float",
         )
     }
 }
