@@ -11,14 +11,18 @@ import ru.vood.dmgen.annotation.Uk
     kClass = "ru.vood.dmgen.datamodel.Deal",
     "ProductPayments_FK_1",
     currentTypeCols = ["dealId"],
-    outTypeCols = ["id"]
+    outTypeCols = ["id"],
+            cols = [ru.vood.dmgen.annotation.ForeignKeyColumns("dealId", "id")]
 )
 @ForeignKey(
 //    Product::class,
     kClass = "ru.vood.dmgen.datamodel.Product",
     "ProductPayments_FK_2",
     currentTypeCols = ["dealId", "productId"],
-    outTypeCols = ["dealId", "id"]
+    outTypeCols = ["dealId", "id"],
+    cols = [ru.vood.dmgen.annotation.ForeignKeyColumns("dealId", "dealId"),
+        ru.vood.dmgen.annotation.ForeignKeyColumns("productId", "id")
+    ]
 )
 //@Uk("Product_UK_3",["summa"])
 data class ProductPayments(
