@@ -11,8 +11,8 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnota
 import javax.lang.model.element.Element
 
 data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
-    override fun elementToIGeneratedField(e: Element): MetaEntityColumn =
-        MetaEntityColumn(e)
+    override fun elementToIGeneratedField(posicion: Int, e: Element): MetaEntityColumn =
+        MetaEntityColumn(posicion, e)
 
     val flowEntity = element.necessaryAnnotation<FlowEntity>()
 

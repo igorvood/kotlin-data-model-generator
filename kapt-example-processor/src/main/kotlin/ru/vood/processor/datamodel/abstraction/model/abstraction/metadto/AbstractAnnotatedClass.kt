@@ -16,12 +16,12 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
 
     val name: String by lazy { element.asType().toString().split(".").last() }
 
-    abstract fun elementToIGeneratedField(e: Element): FIELD_META
+    abstract fun elementToIGeneratedField(posicion: Int, e: Element): FIELD_META
 
     val fields: List<FIELD_META> by lazy {
-        element.enclosedElements
-            .filter { e: Element -> e.kind.isField }
-            .map { element: Element -> elementToIGeneratedField(element) }
+        element.enclosedElements.withIndex()
+            .filter { e -> e.value.kind.isField }
+            .map { element -> elementToIGeneratedField(element.index, element.value) }
     }
 
     val shortName: String by lazy {

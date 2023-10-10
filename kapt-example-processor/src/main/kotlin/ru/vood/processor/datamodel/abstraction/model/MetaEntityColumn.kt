@@ -1,23 +1,22 @@
 package ru.vood.processor.datamodel.abstraction.model
 
-import com.squareup.kotlinpoet.asTypeName
-import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 import ru.vood.dmgen.annotation.Comment
 import ru.vood.dmgen.annotation.Pk
-import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractField
-
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
+import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractField
 import javax.lang.model.element.Element
 
 class MetaEntityColumn(
+    val position: Int,
     element: Element
 ) : AbstractField(element) {
 
     val comment: String? = element.annotation<Comment>().map {
         it.comment
     }.orElse(null)
+
     override fun isNullable(): Boolean {
 //        val asType = element.asType()
 //
@@ -43,7 +42,6 @@ class MetaEntityColumn(
         element.annotation<Pk>()
             .map { true }
             .orElse(false)
-
 
 
 }

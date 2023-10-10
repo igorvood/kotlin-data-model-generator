@@ -24,7 +24,7 @@ class EntityDataClassesGenerator(
             .map { contextData ->
                 val dataClass = contextData.name
 
-                val columns = contextData.fields.sortedBy { it.name }
+                val columns = contextData.fields.sortedBy { it.position }
 
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.kotlinMetaClass.toString()
