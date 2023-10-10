@@ -63,7 +63,7 @@ fun collectMetaForeignKey(
             val foreignClass = ModelClassName(foreignKey.kClass)
             val colsFromAnnotation = foreignKey.cols
                 .map { a -> a.currentTypeCol }.toTypedArray()
-            val colsFrom = foreignKey.currentTypeCols
+//            val colsFrom = foreignKey.currentTypeCols
             val fromCols = metaEntityColumns(
                 entities = entities,
                 entity = currentClass,
