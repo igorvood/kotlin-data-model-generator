@@ -39,6 +39,7 @@ data class Product(
     val fn: Float?,
 //    val bd: BigDecimal,
     val bn: Boolean?,
+    val isdsdd: String?,
 //    val t: Instant,
 
 
