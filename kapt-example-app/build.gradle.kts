@@ -17,6 +17,7 @@ java {
 
 kapt {
     correctErrorTypes = true
+    showProcessorStats = true
 }
 
 dependencies {
@@ -43,6 +44,10 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         jvmTarget = "17"
     }
 }
+tasks.withType<org.jetbrains.kotlin.gradle.internal.KaptWithoutKotlincTask>()
+    .configureEach {
+        kaptProcessJvmArgs.add("-Xmx512m")
+    }
 
 tasks.withType<Test> {
     useJUnitPlatform()
