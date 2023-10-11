@@ -18,6 +18,9 @@ java {
 kapt {
     correctErrorTypes = true
     showProcessorStats = true
+    arguments {
+        arg("key", "value")
+    }
 }
 
 dependencies {
