@@ -20,15 +20,16 @@ import ru.vood.dmgen.annotation.Pk
     ]
 )
 //@Uk("Product_UK_3",["summa"])
-data class ProductPayments(
+interface ProductPayments {
     @Pk
-    val productId: String,
-    @Pk
-    val dealId: Int,
+    val productId: String
 
     @Pk
-    val id: String,
+    val dealId: Int
+
+    @Pk
+    val id: String
 
     val summa: Long
 
-)
+}

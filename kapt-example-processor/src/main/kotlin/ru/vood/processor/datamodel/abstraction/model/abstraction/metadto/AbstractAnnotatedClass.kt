@@ -2,8 +2,10 @@ package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
+import java.lang.invoke.MethodType
 
 import javax.lang.model.element.Element
+import javax.lang.model.type.TypeMirror
 
 abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
     private val element: Element
@@ -19,6 +21,10 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
     abstract fun elementToIGeneratedField(posicion: Int, e: Element): FIELD_META
 
     val fields: List<FIELD_META> by lazy {
+        val map = element.enclosedElements.map { it.asType() }
+//            .filterIsInstance<MethodType>()
+        val kind: TypeMirror = map.get(1)
+//        val asTypeName = kind.asTypeName()
         element.enclosedElements.withIndex()
             .filter { e -> e.value.kind.isField }
             .map { element -> elementToIGeneratedField(element.index, element.value) }

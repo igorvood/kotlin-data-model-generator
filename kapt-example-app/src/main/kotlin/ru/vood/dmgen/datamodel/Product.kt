@@ -15,34 +15,37 @@ import ru.vood.dmgen.datamodel.s.D
     ["otherSystemProductId", "dealId"])
 //@Uk("Product_UK_2",["dealId", "id"])
 //@Uk("Product_UK_3",["l", "d", "f", "bd", "b", "t"])
-data class Product(
+interface Product {
     @Pk
-    val id: String,
+    val id: String
+
     @Pk
-    val dealId: Int,
+    val dealId: Int
 
-    val otherSystemProductId: String,
+    val otherSystemProductId: String
 
-    val productName: String,
+    val productName: String
 
-    val inn : Int?,
+    val inn: Int?
 
-    val D: D,
-    val Dn: D?,
+    val D: D
+    val Dn: D?
 
-    val ln: Long?,
-    val dn: Double?,
-    val fn: Float?,
-//    val bd: BigDecimal,
-    val bn: Boolean?,
-    val isdsdd: String?,
+    val ln: Long?
+    val dn: Double?
+    val fn: Float?
+
+    //    val bd: BigDecimal,
+    val bn: Boolean?
+    val isdsdd: String?
 //    val t: Instant,
 
 
-    val l: Long,
-    val d: Double,
-    val f: Float,
-//    val bd: BigDecimal,
-    val b: Boolean,
+    val l: Long
+    val d: Double
+    val f: Float
+
+    //    val bd: BigDecimal,
+    val b: Boolean
 //    val t: Instant,
-)
+}
