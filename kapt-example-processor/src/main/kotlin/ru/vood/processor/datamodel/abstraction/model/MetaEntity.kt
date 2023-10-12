@@ -8,9 +8,13 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractAnnotatedClass
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotations
 import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnotation
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
-data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
+data class MetaEntity(
+    val element: Element,
+    val roundEnvironment1: RoundEnvironment
+    ) : AbstractAnnotatedClass<MetaEntityColumn>(element, roundEnvironment1) {
     override fun elementToIGeneratedField(posicion: Int, e: Element): MetaEntityColumn =
         MetaEntityColumn(posicion, e)
 

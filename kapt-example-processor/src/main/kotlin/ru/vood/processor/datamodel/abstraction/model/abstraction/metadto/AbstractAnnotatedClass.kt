@@ -3,12 +3,14 @@ package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
 import java.lang.invoke.MethodType
+import javax.annotation.processing.RoundEnvironment
 
 import javax.lang.model.element.Element
 import javax.lang.model.type.TypeMirror
 
 abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
-    private val element: Element
+    private val element: Element,
+    val roundEnvironment: RoundEnvironment
 )/*<Annotation>*/ {
 
     val kotlinMetaClass = when (val t = element.asType().asTypeName()) {
@@ -21,6 +23,10 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
     abstract fun elementToIGeneratedField(posicion: Int, e: Element): FIELD_META
 
     val fields: List<FIELD_META> by lazy {
+        roundEnvironment.rootElements
+//        roundEnv.findNestedElements(SharedPrefs::class, Default::class)?.forEach {
+//            ...
+//        }
         val map = element.enclosedElements.map { it.asType() }
 //            .filterIsInstance<MethodType>()
         val kind: TypeMirror = map.get(1)

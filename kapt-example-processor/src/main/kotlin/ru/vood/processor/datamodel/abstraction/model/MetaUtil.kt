@@ -7,7 +7,8 @@ import javax.lang.model.element.Element
 
 fun collectMetaEntity(
     elementsAnnotatedWith: Set<Element>,
-    collector: Map<Element, MetaEntity> = mapOf()
+    collector: Map<Element, MetaEntity> = mapOf(),
+    roundEnvironment: RoundEnvironment
 ): Map<Element, MetaEntity> {
 
 
@@ -17,11 +18,11 @@ fun collectMetaEntity(
             val head = elementsAnnotatedWith.first()
             val tailElementsAnnotatedWith = elementsAnnotatedWith.drop(1).toSet()
             if (collector.contains(head)) {
-                collectMetaEntity(tailElementsAnnotatedWith, collector)
+                collectMetaEntity(tailElementsAnnotatedWith, collector, roundEnvironment)
             } else {
 
-                val plus = collector.plus(head to MetaEntity(head))
-                collectMetaEntity(tailElementsAnnotatedWith, plus)
+                val plus = collector.plus(head to MetaEntity(head, roundEnvironment))
+                collectMetaEntity(tailElementsAnnotatedWith, plus, roundEnvironment)
             }
         }
 
@@ -137,7 +138,7 @@ fun collectMetaForeignKey(
 fun RoundEnvironment.metaInformation(): MetaInformation {
     val elementsAnnotatedWithFlowEntity = this.getElementsAnnotatedWith(FlowEntity::class.java)
 
-    val allMeta: Map<Element, MetaEntity> = collectMetaEntity(elementsAnnotatedWithFlowEntity)
+    val allMeta: Map<Element, MetaEntity> = collectMetaEntity(elementsAnnotatedWithFlowEntity, roundEnvironment = this)
 
 
     val entities: Map<ModelClassName, MetaEntity> =

@@ -1,6 +1,8 @@
 package ru.vood.processor.datamodel.abstraction
 
 import com.google.auto.service.AutoService
+import ru.vood.dmgen.annotation.FlowEntity
+import ru.vood.dmgen.annotation.Pk
 import ru.vood.processor.datamodel.abstraction.model.*
 import ru.vood.processor.datamodel.abstraction.model.abstraction.AbstractCommonGenerationProcessor
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator.Companion.KAPT_KOTLIN_GENERATED_OPTION_NAME
@@ -21,6 +23,18 @@ import javax.tools.Diagnostic
 @SupportedOptions(KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
+
+        val map = roundEnv.getElementsAnnotatedWith(FlowEntity::class.java)?.map { element ->
+            val className = element.simpleName.toString()
+            val defaults = roundEnv.getElementsAnnotatedWith(Pk::class.java)?.filter {
+                // it.enclosingElement -> DefaultImpls
+                // DefaultImpls.enclosingElement -> com.mypackage.InstanceSettings
+                it.enclosingElement.enclosingElement.simpleName.toString() == className
+            }
+        }?.map { element -> val pair = element to roundEnv.getElementsAnnotatedWith(Pk::class.java)
+            element to roundEnv.
+
+        }?.toMap()
 
         val metaInformation = roundEnv.metaInformation()
         metaInformation.entities
