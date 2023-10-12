@@ -1,6 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.intf.IContextOf
+import ru.vood.dmgen.intf.IEntity
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
@@ -46,9 +47,13 @@ class ContextDataClassesGenerator(
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}<${rootPackage.value}${EntityDataClassesGenerator.entityDataClassesGeneratorPackageName.value}.$entityName>{
+): ${IContextOf::class.java.canonicalName}<${rootPackage.value}${EntityDataClassesGenerator.entityDataClassesGeneratorPackageName.value}.$entityName>,
+${IEntity::class.java.canonicalName}<$fullClassName>
+{
 override val metaEntity: ${IMetaEntity::class.java.canonicalName}
         get() = ${rootPackage.value}${AbstractDataDictionaryGenerator.subPackageAbstractDataDictionaryGenerator.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.$dataClass
+        
+override fun ktSerializer() = serializer()        
 }          
                     
                 """.trimIndent()
