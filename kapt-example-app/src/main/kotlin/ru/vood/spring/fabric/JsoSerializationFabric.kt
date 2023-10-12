@@ -23,9 +23,9 @@ object JsoSerializationFabric {
 
     }
 
-    inline fun <reified T : IEntity<T>> T.toJson(): String {
-        return json.encodeToString(this.ktSerializer(), this)
-    }
+//    inline fun <reified T : IEntity<T>> T.toJson(): String {
+//        return json.encodeToString(this.ktSerializer(), this)
+//    }
 
     inline fun <reified T : IEntity<T>> DataDictionaryEntityEnum.fromJson(string: String): T {
         val entitySerializer = this.entitySerializer<T>()

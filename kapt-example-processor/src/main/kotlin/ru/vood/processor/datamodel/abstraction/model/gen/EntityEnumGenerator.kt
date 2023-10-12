@@ -1,6 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
 import ru.vood.dmgen.intf.EntityName
+import ru.vood.dmgen.intf.IEntity
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -43,7 +44,7 @@ import kotlinx.serialization.KSerializer
 
 enum class $nameClass(
 override val designClass: KClass<*>,
-override val runtimeClass: KClass<*>,
+override val runtimeClass: KClass<out ${IEntity::class.java.canonicalName}<*>>,
 override val serializer: KSerializer<*>,
 override val entityName: ${EntityName::class.java.canonicalName},
 override val comment: String
@@ -51,6 +52,7 @@ override val comment: String
 ): ${IMetaEntity::class.java.canonicalName} {
 $entities;
 
+@Suppress("UNCHECKED_CAST")
 inline fun <reified T> entitySerializer(): KSerializer<T> = this.serializer as KSerializer<T> 
 }
 """
