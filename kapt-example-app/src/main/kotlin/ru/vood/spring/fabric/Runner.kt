@@ -6,13 +6,12 @@ import ru.vood.dmgen.datamodel.metaEnum.DataDictionaryEntityEnum
 import ru.vood.dmgen.datamodel.runtime.dataclasses.DealEntity
 import ru.vood.dmgen.meta.toDto
 import ru.vood.dmgen.meta.toJson
-import ru.vood.spring.fabric.JsoSerializationFabric.fromJson
 
 @Component
 class Runner(
     val JsoSerializationFabric: JsoSerializationFabric,
     val JsonSerializer: JsonSerializer
-    ):CommandLineRunner {
+) : CommandLineRunner {
     override fun run(vararg args: String?) {
         val toJson = DealEntity(1).toJson()
 
