@@ -41,16 +41,21 @@ val ${col.name}: $kotlinMetaClass$nullableSymbol""".trimIndent()
 
                 val fullClassName = """${dataClass}Entity"""
                 val code = """package ${packageName.value}
+import arrow.optics.*                    
+                    
 ${contextData.comment?.let { """/**
 *$it
 */
 """.trimIndent() }?:""}                    
 @kotlinx.serialization.Serializable
+@optics([OpticsTarget.LENS])
 data class $fullClassName (
 $joinToString
 ): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${contextData.kotlinMetaClass.toString()}         
 {
     override fun ktSerializer() = serializer()
+    
+    companion object
 }
                     
                 """.trimIndent()
