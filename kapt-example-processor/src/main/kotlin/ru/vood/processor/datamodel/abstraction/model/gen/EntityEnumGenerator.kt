@@ -7,6 +7,7 @@ import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
+import ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses.EntityDataClassesGenerator.Companion.entityDataClassesGeneratorPackageName
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
@@ -27,16 +28,23 @@ class EntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { """${it.shortName}(${it.kotlinMetaClass.canonicalName}::class, ${EntityName::class.java.canonicalName}("${it.shortName}"), "${it.comment}")""" }
+                    .map { """${it.shortName}(${it.kotlinMetaClass.canonicalName}::class, 
+                        |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity::class,
+                        |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity.serializer(),
+                        |${EntityName::class.java.canonicalName}("${it.shortName}"), 
+                        |"${it.comment}")""".trimMargin() }
                     .sorted()
                     .joinToString(",\n")
 
                 val trimIndent =
                     """package ${packageName.value}
 import kotlin.reflect.KClass
+import kotlinx.serialization.KSerializer
 
 enum class $nameClass(
 override val designClass: KClass<*>,
+override val runtimeClass: KClass<*>,
+override val serializer: KSerializer<*>,
 override val entityName: ${EntityName::class.java.canonicalName},
 override val comment: String
 

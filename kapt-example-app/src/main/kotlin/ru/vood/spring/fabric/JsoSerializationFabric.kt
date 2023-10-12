@@ -4,6 +4,7 @@ import kotlinx.serialization.KSerializer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.vood.dmgen.datamodel.metaEnum.DataDictionaryEntityEnum
+import ru.vood.dmgen.datamodel.runtime.dataclasses.DealEntity
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.spring.fabric.JsonSerializer.json
 import javax.annotation.PostConstruct
@@ -35,6 +36,8 @@ object JsoSerializationFabric {
         type: DataDictionaryEntityEnum, data: String,
 //                                      kClass: KClass<T>
     ): T {
+
+        val serializer1: KSerializer<DealEntity> = DealEntity.serializer()
 
 //        val designClass = type.designClass as KClass<T>
 
