@@ -48,7 +48,10 @@ ${contextData.comment?.let { """/**
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IEntity::class.java.canonicalName}//, ${contextData.kotlinMetaClass.toString()}         
+): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${contextData.kotlinMetaClass.toString()}         
+{
+    override fun ktSerializer() = serializer()
+}
                     
                 """.trimIndent()
 
