@@ -15,4 +15,7 @@ abstract class Deal(
 
 //    val paramsSet: DealParam,
 //    val paramsList: List<DealParam>
-)
+){
+
+
+}
