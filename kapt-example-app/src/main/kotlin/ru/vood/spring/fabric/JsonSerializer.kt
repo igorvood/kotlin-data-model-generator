@@ -13,10 +13,6 @@ object JsonSerializer {
     }
 
 
-    inline fun <reified T : Any> serial(data: String): T {
 
-        return json.decodeFromString(data)
-
-    }
 
 }
