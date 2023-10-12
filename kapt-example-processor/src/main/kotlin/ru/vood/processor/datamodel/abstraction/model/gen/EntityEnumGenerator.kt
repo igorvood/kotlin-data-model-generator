@@ -49,7 +49,9 @@ override val entityName: ${EntityName::class.java.canonicalName},
 override val comment: String
 
 ): ${IMetaEntity::class.java.canonicalName} {
-$entities
+$entities;
+
+inline fun <reified T> entitySerializer(): KSerializer<T> = this.serializer as KSerializer<T> 
 }
 """
                 log(Diagnostic.Kind.NOTE, "Create $nameClass")
