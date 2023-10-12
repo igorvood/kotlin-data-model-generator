@@ -43,9 +43,9 @@ import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 
 enum class $nameClass(
-override val designClass: KClass<*>,
+override val designClass: KClass<out Any>,
 override val runtimeClass: KClass<out ${IEntity::class.java.canonicalName}<*>>,
-override val serializer: KSerializer<*>,
+override val serializer: KSerializer<out ${IEntity::class.java.canonicalName}<*>>,
 override val entityName: ${EntityName::class.java.canonicalName},
 override val comment: String
 
