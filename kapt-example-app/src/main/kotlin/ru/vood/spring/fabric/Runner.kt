@@ -13,9 +13,9 @@ class Runner(
     val JsonSerializer: JsonSerializer
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-        val toJson = DealEntity(1).toJson()
+//        val toJson = DealEntity(1).toJson()
 
-        val toDto = toDto<DealEntity>(toJson)
+//        val toDto = toDto<DealEntity>(toJson)
 
         val encodeToString = JsonSerializer.json.encodeToString(TSome.serializer(), TSome("asd"))
 

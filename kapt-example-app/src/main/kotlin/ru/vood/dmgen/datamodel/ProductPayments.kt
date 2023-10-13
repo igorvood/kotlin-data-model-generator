@@ -1,10 +1,11 @@
 package ru.vood.dmgen.datamodel
 
+import ru.vood.dmgen.annotation.FKType
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.Pk
 
-@FlowEntity
+@FlowEntity(FKType.AGGREGATE)
 @ForeignKey(
 //    kClass = Deal::class,
     kClass = "ru.vood.dmgen.datamodel.Deal",

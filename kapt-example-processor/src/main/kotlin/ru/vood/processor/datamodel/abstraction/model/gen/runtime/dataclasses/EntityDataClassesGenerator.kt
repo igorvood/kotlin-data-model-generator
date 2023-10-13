@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
+import ru.vood.dmgen.annotation.FKType
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
@@ -21,12 +22,12 @@ class EntityDataClassesGenerator(
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-        val foreignKeyMap = generatedClassData.collectMetaForeignKey.groupBy { it.toEntity }
+        val foreignKeyMap: Map<MetaEntity, List<MetaForeignKey>> = generatedClassData.collectMetaForeignKey.groupBy { it.toEntity }
         val map = metaEntitySet
             .map { metaEntity ->
 
-                val metaForeignKeys = foreignKeyMap[metaEntity]
-                val fk: String = foreignKeyProcessor(metaEntity, metaForeignKeys)
+
+                val fk: String = foreignKeyProcessor(metaEntity, foreignKeyMap)
 
                 val dataClass = metaEntity.name
 
@@ -64,7 +65,7 @@ ${
 @kotlinx.serialization.Serializable
 @optics([OpticsTarget.LENS])
 data class $fullClassName (
-$joinToString
+$joinToString,
 
 $fk
 ): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}         
@@ -86,33 +87,41 @@ $fk
         return map
     }
 
-    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeys: List<MetaForeignKey>?): String {
-        if (metaForeignKeys != null && metaForeignKeys.isNotEmpty()) {
-            metaForeignKeys.map { foreignKey ->
-                val map = foreignKey.fkCols.map { it.from.name }
+
+    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeys: Map<MetaEntity, List<MetaForeignKey>>): String {
+        val metaForeignKeysToEntity = metaForeignKeys[toMetaEntity]
+        return if (metaForeignKeysToEntity != null && metaForeignKeysToEntity.isNotEmpty()) {
+            metaForeignKeysToEntity
+                .filter { q-> q.fromEntity.flowEntity== FKType.INNER }
+                .map { foreignKey ->
                 val fromEntity = foreignKey.fromEntity
-                val ukToMeta = foreignKey.uk
-                val uniqueKeysFieldsFromEntity = fromEntity.uniqueKeysFields.keys.map { it.cols }
-                val cols = ukToMeta.cols
-                val contains = uniqueKeysFieldsFromEntity.contains(cols)
-                val relationType = if (contains) {
-                    "OneToOne"
+                val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
+                val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
+                val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
+                    ukCols.equalsAnyOrder(fromEntityFkCols)
+                }
+                val relationType = if (uksOneTOne.size==1) {
+                    val metaForeignKeyMayBeCircle = metaForeignKeys[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
+                        ?.isNotEmpty()
+                        ?:false
+
+
+                    val isOneToOneOptional = !metaForeignKeyMayBeCircle
+                    val s = if (isOneToOneOptional) {
+                        "?"
+                    } else ""
+                    "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
                 } else {
                     ""
                 }
 
+                    relationType
+            }.filter { ass->ass.isNotEmpty() }
+                .joinToString(",\n")
 
 
+        }else{""}
 
-
-
-
-
-            }
-
-
-        }
-        return ""
     }
 
     override val subPackage: PackageName
@@ -121,4 +130,8 @@ $fk
     companion object {
         val entityDataClassesGeneratorPackageName = PackageName("runtime.dataclasses")
     }
+}
+
+private inline fun <reified E> Set<E>.equalsAnyOrder(set: Set<E>): Boolean {
+    return this.minus(set).isEmpty() && set.minus(this).isEmpty()
 }

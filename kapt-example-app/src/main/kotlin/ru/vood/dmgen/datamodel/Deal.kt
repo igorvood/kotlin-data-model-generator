@@ -1,12 +1,15 @@
 package ru.vood.dmgen.datamodel
 
-import ru.vood.dmgen.annotation.Comment
-import ru.vood.dmgen.annotation.FKType
-import ru.vood.dmgen.annotation.FlowEntity
-import ru.vood.dmgen.annotation.Pk
+import ru.vood.dmgen.annotation.*
 
 @Comment("Это сущность Сделка")
 @FlowEntity(FKType.AGGREGATE)
+@ForeignKey(
+    kClass = "ru.vood.dmgen.datamodel.DealParamOneToOne",
+    "Dealasdasdasd_deal_FK",
+    cols = [ForeignKeyColumns("id", "dealId")]
+)
+
 //@Uk(["paramsList"])
 abstract class Deal(
     @Pk
@@ -16,7 +19,7 @@ abstract class Deal(
 
 //    val paramsSet: DealParam,
 //    val paramsList: List<DealParam>
-){
+) {
 
 
 }
