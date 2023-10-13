@@ -11,10 +11,10 @@ import ru.vood.dmgen.datamodel.metaEnum.*
 class Demo1123Application
 
 fun main(args: Array<String>) {
-    println(DataDictionaryEntityEnum.DealParam)
+    println(DataDictionaryEntityEnum.DealParamOneToOne)
     println(DataDictionaryForeignKeyEnum.Product_FK_1)
-    println(DataDictionaryUniqueKeyEnum.DealParam_PK)
-    println(DataDictionaryColumnEntityEnum.DealParam_id)
+    println(DataDictionaryUniqueKeyEnum.DealParamOneToOne_PK)
+    println(DataDictionaryColumnEntityEnum.DealParamOneToOne_dealId)
     println("============================")
 //
     Dependency.entityDependency.entries.forEach { println(it) }
