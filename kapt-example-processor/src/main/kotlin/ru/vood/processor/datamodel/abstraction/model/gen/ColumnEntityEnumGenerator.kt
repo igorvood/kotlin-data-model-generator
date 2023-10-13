@@ -29,9 +29,9 @@ class ColumnEntityEnumGenerator(
                 val entities = generatedClassData
                     .flatMap { ent -> ent.fields
                         .map { f->
-                            """${ent.shortName}_${f.name}(
+                            """${ent.shortName}_${f.name.value}(
                                 |${ent.shortName},
-                                |${ent.kotlinMetaClass.canonicalName}::${f.name},
+                                |${ent.kotlinMetaClass.canonicalName}::${f.name.value},
                                 |${ColumnName::class.java.canonicalName}("${ent.shortName}"),
                                 |"${f.comment}"
                                 |)""".trimMargin()

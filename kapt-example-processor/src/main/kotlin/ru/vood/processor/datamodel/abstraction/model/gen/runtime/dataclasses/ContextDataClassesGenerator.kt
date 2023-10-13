@@ -32,12 +32,12 @@ class ContextDataClassesGenerator(
                 val dataClass = contextData.first.name
                 val entityName = """${dataClass}Entity"""
                 val contextName = contextData.second.key.name
-                val columns = contextData.second.value.sortedBy { it.name }
+                val columns = contextData.second.value.sortedBy { it.name.value }
 
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.type
 
-                    "val ${col.name}: $kotlinMetaClass"
+                    "val ${col.name.value}: $kotlinMetaClass"
                 }
                     .joinToString(",\n")
 

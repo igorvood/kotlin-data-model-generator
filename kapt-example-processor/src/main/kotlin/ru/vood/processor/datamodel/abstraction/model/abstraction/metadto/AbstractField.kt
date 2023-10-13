@@ -3,6 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.asTypeName
+import ru.vood.processor.datamodel.abstraction.model.ColumnName
 import ru.vood.processor.datamodel.abstraction.model.abstraction.annotation
 import java.util.*
 import javax.lang.model.element.Element
@@ -21,7 +22,7 @@ abstract class AbstractField(val element: Element) {
         }
     }
 
-    val name: String = element.simpleName.toString()
+    val name = ColumnName(element.simpleName.toString())
 
     abstract fun isNullable(): Boolean
 

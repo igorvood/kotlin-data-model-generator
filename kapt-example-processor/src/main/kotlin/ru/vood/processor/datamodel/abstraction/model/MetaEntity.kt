@@ -24,8 +24,8 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
 
     val pkColumns by lazy {
 
-        val pkCols = fields.filter { it.inPk }.map { ColumnName(it.name) }.toSet()
-        val notNullPkCols = fields.filter { it.inPk && !it.isNullable() }.map { ColumnName(it.name) }.toSet()
+        val pkCols = fields.filter { it.inPk }.map { it.name }.toSet()
+        val notNullPkCols = fields.filter { it.inPk && !it.isNullable() }.map { it.name }.toSet()
 
         val minus = pkCols.minus(notNullPkCols.toSet())
         if (minus.isNotEmpty()){
@@ -39,7 +39,7 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
             .map { anno ->
                 UkDto(UkName(anno.name), anno.cols.map { ColumnName(it) }.toSet()) to anno.cols
                     .map { annoColName ->
-                        annoColName to fields.filter { f -> f.name == annoColName }
+                        annoColName to fields.filter { f -> f.name.value == annoColName }
                             .map { metaCol -> metaCol }
                             .firstOrNull()
                     }

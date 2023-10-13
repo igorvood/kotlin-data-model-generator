@@ -2,6 +2,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
+import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
 import ru.vood.processor.datamodel.abstraction.model.MetaInformation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -16,28 +17,35 @@ class EntityDataClassesGenerator(
     messager: Messager,
     processingEnv: ProcessingEnvironment,
     rootPackage: PackageName
-) : AbstractGenerator<MetaInformation>(messager, processingEnv,rootPackage) {
+) : AbstractGenerator<MetaInformation>(messager, processingEnv, rootPackage) {
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-
-        val foreignKeyMap = generatedClassData.collectMetaForeignKey.associateBy { it.toEntity }
+        val foreignKeyMap = generatedClassData.collectMetaForeignKey.groupBy { it.toEntity }
         val map = metaEntitySet
-            .map { contextData ->
-                val dataClass = contextData.name
+            .map { metaEntity ->
 
-                val columns = contextData.fields.sortedBy { it.position }
+                val metaForeignKeys = foreignKeyMap[metaEntity]
+                val fk: String = foreignKeyProcessor(metaEntity, metaForeignKeys)
+
+                val dataClass = metaEntity.name
+
+                val columns = metaEntity.fields.sortedBy { it.position }
 
                 val joinToString = columns.map { col ->
                     val kotlinMetaClass = col.type
 
                     col.element
                     val nullableSymbol = if (col.isNullable()) "?" else ""
-                    """${col.comment?.let { """/**
+                    """${
+                        col.comment?.let {
+                            """/**
 *$it
 */
-""".trimIndent() }?:""}     
-val ${col.name}: $kotlinMetaClass$nullableSymbol""".trimIndent()
+""".trimIndent()
+                        } ?: ""
+                    }     
+val ${col.name.value}: $kotlinMetaClass$nullableSymbol""".trimIndent()
                 }
                     .joinToString(",\n")
 
@@ -45,15 +53,21 @@ val ${col.name}: $kotlinMetaClass$nullableSymbol""".trimIndent()
                 val code = """package ${packageName.value}
 import arrow.optics.*                    
                     
-${contextData.comment?.let { """/**
+${
+                    metaEntity.comment?.let {
+                        """/**
 *$it
 */
-""".trimIndent() }?:""}                    
+""".trimIndent()
+                    } ?: ""
+                }                    
 @kotlinx.serialization.Serializable
 @optics([OpticsTarget.LENS])
 data class $fullClassName (
 $joinToString
-): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${contextData.kotlinMetaClass.toString()}         
+
+$fk
+): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}         
 {
     override fun ktSerializer() = serializer()
     
@@ -72,10 +86,39 @@ $joinToString
         return map
     }
 
+    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeys: List<MetaForeignKey>?): String {
+        if (metaForeignKeys != null && metaForeignKeys.isNotEmpty()) {
+            metaForeignKeys.map { foreignKey ->
+                val map = foreignKey.fkCols.map { it.from.name }
+                val fromEntity = foreignKey.fromEntity
+                val ukToMeta = foreignKey.uk
+                val uniqueKeysFieldsFromEntity = fromEntity.uniqueKeysFields.keys.map { it.cols }
+                val cols = ukToMeta.cols
+                val contains = uniqueKeysFieldsFromEntity.contains(cols)
+                val relationType = if (contains) {
+                    "OneToOne"
+                } else {
+                    ""
+                }
+
+
+
+
+
+
+
+
+            }
+
+
+        }
+        return ""
+    }
+
     override val subPackage: PackageName
         get() = entityDataClassesGeneratorPackageName
 
-    companion object{
+    companion object {
         val entityDataClassesGeneratorPackageName = PackageName("runtime.dataclasses")
     }
 }

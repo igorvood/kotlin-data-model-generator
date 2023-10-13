@@ -41,7 +41,7 @@ fun metaEntityColumns(
         entities[entity]
             ?: error("Для внешнего ключа сушности ${currentClass.value} Не найдена сущность в контексте ${entity.value}")
     val fromCols = cols.map { fkField ->
-        fromMetaEntity.fields.filter { field -> field.name == fkField }.firstOrNull()
+        fromMetaEntity.fields.filter { field -> field.name.value == fkField }.firstOrNull()
             ?: error("Не найдено поле ${fkField}  внешнего ключа для сущности  ${entity.value}")
     }
     return fromCols
