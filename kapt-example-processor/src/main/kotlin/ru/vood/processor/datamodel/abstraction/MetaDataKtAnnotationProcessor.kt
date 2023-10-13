@@ -23,6 +23,9 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
     override fun process(annotations: MutableSet<out TypeElement>, roundEnv: RoundEnvironment): Boolean {
 
         val metaInformation = roundEnv.metaInformation()
+
+        metaInformation.fieldsFk()
+
         metaInformation.entities
             .forEach { entity ->
                 with(entity.key.value) {
