@@ -6,6 +6,7 @@ package ru.vood.dmgen.annotation
     AnnotationTarget.VALUE_PARAMETER,
 )
 @Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
 annotation class Comment(
     val comment: String,
 )

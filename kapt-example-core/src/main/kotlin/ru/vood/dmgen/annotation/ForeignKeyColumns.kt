@@ -1,8 +1,9 @@
 package ru.vood.dmgen.annotation
 
-@Target(AnnotationTarget.CLASS)
+@Target()
 @Retention(AnnotationRetention.RUNTIME)
 @Repeatable
+@MustBeDocumented
 annotation class ForeignKeyColumns(
     val currentTypeCol: String,
     val outTypeCol: String,

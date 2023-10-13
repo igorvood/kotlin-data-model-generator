@@ -2,4 +2,10 @@ package ru.vood.dmgen.annotation
 
 @Target( AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-annotation class FlowEntity
+@MustBeDocumented
+annotation class FlowEntity(
+    val entityType: FKType = FKType.INNER,
+)
+enum class FKType{
+    INNER, AGGREGATE
+}
