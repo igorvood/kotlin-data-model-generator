@@ -3,7 +3,7 @@ package ru.vood.dmgen.datamodel
 import ru.vood.dmgen.annotation.*
 import ru.vood.dmgen.datamodel.s.D
 
-@FlowEntity(FKType.AGGREGATE)
+@FlowEntity(FlowEntityType.AGGREGATE)
 @ForeignKey(
 //    kClass = Deal::class.java.canonicalName,
 

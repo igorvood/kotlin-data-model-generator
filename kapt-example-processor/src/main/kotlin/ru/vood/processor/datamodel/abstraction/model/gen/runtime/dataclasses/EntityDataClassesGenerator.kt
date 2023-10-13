@@ -1,6 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
-import ru.vood.dmgen.annotation.FKType
+import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
@@ -92,7 +92,7 @@ $fk
         val metaForeignKeysToEntity = metaForeignKeys[toMetaEntity]
         return if (metaForeignKeysToEntity != null && metaForeignKeysToEntity.isNotEmpty()) {
             metaForeignKeysToEntity
-                .filter { q-> q.fromEntity.flowEntity== FKType.INNER }
+                .filter { q-> q.fromEntity.flowEntity== FlowEntityType.INNER }
                 .map { foreignKey ->
                 val fromEntity = foreignKey.fromEntity
                 val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()

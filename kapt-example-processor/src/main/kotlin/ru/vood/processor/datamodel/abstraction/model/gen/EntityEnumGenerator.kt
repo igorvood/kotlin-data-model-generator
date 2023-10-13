@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.EntityName
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.dmgen.intf.IMetaEntity
@@ -33,7 +34,10 @@ class EntityEnumGenerator(
                         |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity::class,
                         |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity.serializer(),
                         |${EntityName::class.java.canonicalName}("${it.shortName}"), 
-                        |"${it.comment}")""".trimMargin() }
+                        |"${it.comment}",
+                        |${it.flowEntity}
+                        |)""".trimMargin()
+                    }
                     .sorted()
                     .joinToString(",\n")
 
@@ -41,13 +45,17 @@ class EntityEnumGenerator(
                     """package ${packageName.value}
 import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
+import ${FlowEntityType::class.java.canonicalName}.*
+import ${FlowEntityType::class.java.canonicalName}
+
 
 enum class $nameClass(
 override val designClass: KClass<out Any>,
 override val runtimeClass: KClass<out ${IEntity::class.java.canonicalName}<*>>,
 override val serializer: KSerializer<out ${IEntity::class.java.canonicalName}<*>>,
 override val entityName: ${EntityName::class.java.canonicalName},
-override val comment: String
+override val comment: String,
+override val entityType: FlowEntityType
 
 ): ${IMetaEntity::class.java.canonicalName} {
 $entities;

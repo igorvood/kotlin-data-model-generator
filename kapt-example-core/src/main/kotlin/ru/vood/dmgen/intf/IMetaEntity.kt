@@ -1,6 +1,7 @@
 package ru.vood.dmgen.intf
 
 import kotlinx.serialization.KSerializer
+import ru.vood.dmgen.annotation.FlowEntityType
 import kotlin.reflect.KClass
 
 interface IMetaEntity {
@@ -9,6 +10,7 @@ interface IMetaEntity {
     val entityName: EntityName
     val comment: String
     val serializer: KSerializer<*>
+    val entityType: FlowEntityType
 
 }
 

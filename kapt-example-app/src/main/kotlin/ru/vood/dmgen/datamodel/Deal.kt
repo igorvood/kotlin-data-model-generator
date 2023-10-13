@@ -3,7 +3,7 @@ package ru.vood.dmgen.datamodel
 import ru.vood.dmgen.annotation.*
 
 @Comment("Это сущность Сделка")
-@FlowEntity(FKType.AGGREGATE)
+@FlowEntity(FlowEntityType.AGGREGATE)
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.DealParamOneToOne",
     "Dealasdasdasd_deal_FK",
