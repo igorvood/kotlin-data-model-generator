@@ -2,6 +2,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
+import ru.vood.processor.datamodel.abstraction.model.MetaInformation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -13,14 +14,15 @@ import javax.tools.Diagnostic
 
 class EntityDataClassesGenerator(
     messager: Messager,
-
     processingEnv: ProcessingEnvironment,
     rootPackage: PackageName
+) : AbstractGenerator<MetaInformation>(messager, processingEnv,rootPackage) {
 
-) : AbstractGenerator<Set<MetaEntity>>(messager, processingEnv,rootPackage) {
+    override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
+        val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
 
-    override fun textGenerator(generatedClassData: Set<MetaEntity>): Set<GeneratedFile> {
-        val map = generatedClassData
+        val foreignKeyMap = generatedClassData.collectMetaForeignKey.associateBy { it.toEntity }
+        val map = metaEntitySet
             .map { contextData ->
                 val dataClass = contextData.name
 
