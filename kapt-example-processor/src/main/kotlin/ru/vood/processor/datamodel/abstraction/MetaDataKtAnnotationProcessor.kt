@@ -24,8 +24,6 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
 
         val metaInformation = roundEnv.metaInformation()
 
-        metaInformation.fieldsFk()
-
         metaInformation.entities
             .forEach { entity ->
                 with(entity.key.value) {
