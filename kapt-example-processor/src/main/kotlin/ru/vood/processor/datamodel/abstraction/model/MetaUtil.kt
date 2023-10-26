@@ -60,22 +60,22 @@ fun collectMetaForeignKey(
             val head = elementsAnnotatedWith.first()
             val foreignKey = head.first
 
-            val currentClass = head.second
-            val foreignClass = ModelClassName(foreignKey.kClass)
+            val fromEntity = head.second
+            val toEntity = ModelClassName(foreignKey.kClass)
             val colsFromAnnotation = foreignKey.cols
                 .map { a -> a.currentTypeCol }.toTypedArray()
 //            val colsFrom = foreignKey.currentTypeCols
             val fromCols = metaEntityColumns(
                 entities = entities,
-                entity = currentClass,
+                entity = fromEntity,
                 cols = colsFromAnnotation,//foreignKey.cols.map { q -> q.currentTypeCol }.toTypedArray(),
-                currentClass = currentClass
+                currentClass = fromEntity
             )
 
             val toCols = metaEntityColumns(
                 entities = entities,
-                entity = foreignClass,
-                currentClass = currentClass,
+                entity = toEntity,
+                currentClass = fromEntity,
 //                cols = foreignKey.outTypeCols//
                 cols = foreignKey.cols.map { q -> q.outTypeCol }.toTypedArray()
             )
@@ -93,7 +93,7 @@ fun collectMetaForeignKey(
                     }
                 }
 
-            val foreignMetaEntity = entities[foreignClass]!!
+            val foreignMetaEntity = entities[toEntity]!!
             val uks = foreignMetaEntity.uniqueKeysFields
                 .filter { uksEntry ->
 
@@ -104,7 +104,7 @@ fun collectMetaForeignKey(
                 }
             val ukDto = if (uks.size != 1) {
                 error(
-                    """У сущности ${currentClass.value} 
+                    """У сущности ${fromEntity.value} 
                     для внешнего ключа $foreignKey 
                     во внешней таблице должен быть строго один уникальный ключ
                     список подходящих ключей-> ${uks.map { it.key.name.value }}"""
@@ -121,7 +121,7 @@ fun collectMetaForeignKey(
 
             val element =
                 MetaForeignKey(
-                    ForeignKeyName(foreignKey.name), entities[currentClass]!!, foreignMetaEntity, fkCols,
+                    ForeignKeyName(foreignKey.name), entities[fromEntity]!!, foreignMetaEntity, fkCols,
                     ukDto
                 )
 
@@ -217,11 +217,22 @@ fun fieldsFk(collectMetaForeignKey: Set<MetaForeignKey>,
 
                         val isOneToOneOptional = !metaForeignKeyMayBeCircle
                         val s = if (isOneToOneOptional) {
-                            "isOneToOneOptional"
+                            "isOneToOneOptional"// to listOf()
                         } else "OneToOne"
                         s
                     } else {
-                        ""
+                        val uksOneToMany = fromEntityUKsCols
+                            .filter { ukCols ->
+                                !ukCols.equalsAnyOrder(fromEntityFkCols) && fromEntityUKsCols.minus(ukCols).isEmpty()
+                            }
+                        if (uksOneToMany.size==1){
+                            val elements = uksOneToMany.first()
+                            val fromEntityUKsCols1 = fromEntityFkCols
+                            val minus = fromEntityUKsCols1.minus(elements)
+                            "uksOneToMany" //   to minus
+                        }else{"" //to listOf()
+                        }
+
                     }
 
                     fromMetaEntity to relationType
