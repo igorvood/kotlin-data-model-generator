@@ -60,22 +60,22 @@ fun collectMetaForeignKey(
             val head = elementsAnnotatedWith.first()
             val foreignKey = head.first
 
-            val fromEntity = head.second
-            val toEntity = ModelClassName(foreignKey.kClass)
+            val fromMetaEntityClassName = head.second
+            val toMetaEntityClassName = ModelClassName(foreignKey.kClass)
             val colsFromAnnotation = foreignKey.cols
                 .map { a -> a.currentTypeCol }.toTypedArray()
 //            val colsFrom = foreignKey.currentTypeCols
             val fromCols = metaEntityColumns(
                 entities = entities,
-                entity = fromEntity,
+                entity = fromMetaEntityClassName,
                 cols = colsFromAnnotation,//foreignKey.cols.map { q -> q.currentTypeCol }.toTypedArray(),
-                currentClass = fromEntity
+                currentClass = fromMetaEntityClassName
             )
 
             val toCols = metaEntityColumns(
                 entities = entities,
-                entity = toEntity,
-                currentClass = fromEntity,
+                entity = toMetaEntityClassName,
+                currentClass = fromMetaEntityClassName,
 //                cols = foreignKey.outTypeCols//
                 cols = foreignKey.cols.map { q -> q.outTypeCol }.toTypedArray()
             )
@@ -93,7 +93,7 @@ fun collectMetaForeignKey(
                     }
                 }
 
-            val foreignMetaEntity = entities[toEntity]!!
+            val foreignMetaEntity = entities[toMetaEntityClassName]!!
             val uks = foreignMetaEntity.uniqueKeysFields
                 .filter { uksEntry ->
 
@@ -104,7 +104,7 @@ fun collectMetaForeignKey(
                 }
             val ukDto = if (uks.size != 1) {
                 error(
-                    """У сущности ${fromEntity.value} 
+                    """У сущности ${fromMetaEntityClassName.value} 
                     для внешнего ключа $foreignKey 
                     во внешней таблице должен быть строго один уникальный ключ
                     список подходящих ключей-> ${uks.map { it.key.name.value }}"""
@@ -121,7 +121,7 @@ fun collectMetaForeignKey(
 
             val element =
                 MetaForeignKey(
-                    ForeignKeyName(foreignKey.name), entities[fromEntity]!!, foreignMetaEntity, fkCols,
+                    ForeignKeyName(foreignKey.name), entities[fromMetaEntityClassName]!!, foreignMetaEntity, fkCols,
                     ukDto
                 )
 
