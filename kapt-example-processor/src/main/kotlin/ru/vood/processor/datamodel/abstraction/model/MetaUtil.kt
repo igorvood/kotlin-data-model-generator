@@ -135,25 +135,8 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     val entities: Map<ModelClassName, MetaEntity> =
         collectMetaEntity(elementsAnnotatedWithFlowEntity).map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
 
-    val map = entities.flatMap { it.value.uniqueKeysFields.entries.map { w -> w.key.name to it.key } }
-        .groupBy { it.first.value }
-        .filter { it.value.size > 1 }
-        .map { "dublicate uk name ${it.key} for entities ${it.value.map { w -> w.second.value }}" }
-
-    if (map.isNotEmpty()) {
-        error(map)
-    }
-
-    val groupBy =
-        entities.map { it.key to it.value.name }
-            .groupBy { it.second }
-            .filter { it.value.size > 1 }
-            .flatMap { it.value.map { e -> e.first } }
-            .distinct()
-            .joinToString(",\n")
-    if (groupBy.isNotEmpty()) {
-        error("Class name without package must be unique. Duplicate names entity for next classes: \n$groupBy")
-    }
+    checkDublicateUk(entities)
+    checkDublicateClassName(entities)
 
 
     val fks = entities.map { it.value }
@@ -179,6 +162,30 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     val message = metaInformation.aggregateInnerDep()
     println(message)
     return metaInformation
+}
+
+private fun checkDublicateClassName(entities: Map<ModelClassName, MetaEntity>) {
+    val groupBy =
+        entities.map { it.key to it.value.name }
+            .groupBy { it.second }
+            .filter { it.value.size > 1 }
+            .flatMap { it.value.map { e -> e.first } }
+            .distinct()
+            .joinToString(",\n")
+    if (groupBy.isNotEmpty()) {
+        error("Class name without package must be unique. Duplicate names entity for next classes: \n$groupBy")
+    }
+}
+
+private fun checkDublicateUk(entities: Map<ModelClassName, MetaEntity>) {
+    val dublicatesUk = entities.flatMap { it.value.uniqueKeysFields.entries.map { w -> w.key.name to it.key } }
+        .groupBy { it.first.value }
+        .filter { it.value.size > 1 }
+        .map { "dublicate uk name ${it.key} for entities ${it.value.map { w -> w.second.value }}" }
+
+    if (dublicatesUk.isNotEmpty()) {
+        error(dublicatesUk)
+    }
 }
 
 fun fieldsFk(
