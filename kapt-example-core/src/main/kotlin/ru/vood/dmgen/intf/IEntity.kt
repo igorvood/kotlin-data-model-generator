@@ -6,3 +6,5 @@ interface IEntity<T: IEntity<T>> {
 
     fun ktSerializer() : KSerializer<out T>
 }
+
+interface IAggregate<T: IAggregate<T>>: IEntity<T>

@@ -2,6 +2,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.annotation.RelationType
+import ru.vood.dmgen.intf.IAggregate
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
@@ -52,6 +53,11 @@ val ${col.name.value}: $kotlinMetaClass$nullableSymbol""".trimIndent()
                     .joinToString(",\n")
 
                 val fullClassName = """${dataClass}Entity"""
+                val s = when (metaEntity.flowEntityType){
+                    FlowEntityType.AGGREGATE -> """${IAggregate::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}"""
+                    FlowEntityType.INNER -> """${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}"""
+                }
+
                 val code = """package ${packageName.value}
 //import arrow.optics.*                    
                     
@@ -69,7 +75,7 @@ data class $fullClassName (
 $joinToString,
 
 $fk
-): ${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}         
+): $s         
 {
     override fun ktSerializer() = serializer()
     
