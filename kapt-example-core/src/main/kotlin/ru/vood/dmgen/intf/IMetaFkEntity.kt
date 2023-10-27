@@ -7,5 +7,11 @@ interface IMetaFkEntity {
     val toEntity: IMetaEntity
     val uk: IMetaUkEntity
     val relationType: RelationType
+    val fkCols: Set<FkPair>
 
 }
+
+data class FkPair(
+    val from: IMetaColumnEntity,
+    val to: IMetaColumnEntity
+)
