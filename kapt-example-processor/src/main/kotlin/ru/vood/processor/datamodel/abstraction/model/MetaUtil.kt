@@ -137,16 +137,23 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
 
     checkDublicateUk(entities)
     checkDublicateClassName(entities)
-
-
     val fks = entities.map { it.value }
         .flatMap { qw ->
             qw.foreignKeysAnnotations.map { fk -> fk to ModelClassName(qw.kotlinMetaClass.toString()) }
         }
 
     val collectMetaForeignKey = collectMetaForeignKey(fks, entities)
+    checkDublicateFKName(collectMetaForeignKey)
 
 
+    val fieldsFk = fieldsFk(collectMetaForeignKey)
+    val metaInformation = MetaInformation(fieldsFk, entities)
+    val message = metaInformation.aggregateInnerDep()
+    println(message)
+    return metaInformation
+}
+
+private fun checkDublicateFKName(collectMetaForeignKey: Set<MetaForeignKeyTemporary>) {
     val dublicatetdFkName =
         collectMetaForeignKey.map { it.name to it.fromEntity.name }
             .groupBy { it.first }
@@ -157,11 +164,6 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     if (dublicatetdFkName.isNotEmpty()) {
         error(dublicatetdFkName)
     }
-    val fieldsFk = fieldsFk(collectMetaForeignKey, entities)
-    val metaInformation = MetaInformation(fieldsFk, entities)
-    val message = metaInformation.aggregateInnerDep()
-    println(message)
-    return metaInformation
 }
 
 private fun checkDublicateClassName(entities: Map<ModelClassName, MetaEntity>) {
@@ -188,9 +190,9 @@ private fun checkDublicateUk(entities: Map<ModelClassName, MetaEntity>) {
     }
 }
 
-fun fieldsFk(
+private fun fieldsFk(
     collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
-    entities: Map<ModelClassName, MetaEntity>
+
 ): Set<MetaForeignKey> {
     val metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>> =
         collectMetaForeignKeyTemporary.groupBy { it.toEntity }
