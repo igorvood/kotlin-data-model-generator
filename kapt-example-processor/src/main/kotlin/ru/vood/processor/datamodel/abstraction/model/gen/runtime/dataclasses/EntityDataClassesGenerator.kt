@@ -97,8 +97,6 @@ $fk
         toMetaEntity: MetaEntity,
         metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKey>>
     ): String {
-        val metaForeignKeysToEntityOptionalTemp = metaForeignKeysTemporary[toMetaEntity]
-
         val metaForeignKeysToEntityOptional =
             metaForeignKeysTemporary[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER }?.associate { it to Relation.OPTIONAL }
             ?: mapOf()
@@ -128,43 +126,6 @@ $fk
             .filter { it != "" }
             .joinToString(",\n")
 
-
-//        val s1 = if (metaForeignKeysToEntityOptionalTemp != null && metaForeignKeysToEntityOptionalTemp.isNotEmpty()) {
-//
-//
-//            metaForeignKeysToEntityOptionalTemp
-//                .filter { q -> q.fromEntity.flowEntity == FlowEntityType.INNER }
-//                .map { foreignKey ->
-//                    val fromEntity = foreignKey.fromEntity
-//                    val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
-//                    val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
-//                    val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
-//                        ukCols.equalsAnyOrder(fromEntityFkCols)
-//                    }
-//                    val relationType = if (uksOneTOne.size == 1) {
-//                        val metaForeignKeyMayBeCircle =
-//                            metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
-//                                ?.isNotEmpty()
-//                                ?: false
-//
-//
-//                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
-//                        val s = if (isOneToOneOptional) {
-//                            "?"
-//                        } else ""
-//                        "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
-//                    } else {
-//                        ""
-//                    }
-//
-//                    relationType
-//                }.filter { ass -> ass.isNotEmpty() }
-//                .joinToString(",\n")
-//
-//
-//        } else {
-//            ""
-//        }
         return joinToString
 
     }
