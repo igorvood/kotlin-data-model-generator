@@ -6,7 +6,7 @@ import ru.vood.dmgen.annotation.*
 @FlowEntity(FlowEntityType.AGGREGATE)
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.DealParamOneToOne",
-    "Dealasdasdasd_deal_FK",
+    "Deal_2_DealParamOneToOne_FK",
     cols = [ForeignKeyColumns("id", "dealId")]
 )
 
