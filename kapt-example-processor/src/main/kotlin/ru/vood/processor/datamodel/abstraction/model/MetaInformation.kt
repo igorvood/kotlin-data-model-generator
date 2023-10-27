@@ -1,36 +1,58 @@
 package ru.vood.processor.datamodel.abstraction.model
 
-import ru.vood.dmgen.annotation.FlowEntityType
 
 data class MetaInformation(
-    val collectMetaForeignKeyTemporary: Set<MetaForeignKey>,
+    val metaForeignKeys: Set<MetaForeignKey>,
     val entities: Map<ModelClassName, MetaEntity>
 ) {
 
-    fun aggregateInnerDep(): List<Tree> {
-        val aggregate = entities.filter { it.value.flowEntityType == FlowEntityType.AGGREGATE }
-        val map = aggregate.map { collectInnerDependency(it.value) }
+    fun aggregateInnerDep(): Tree {
+        val filter =
+            entities.filter { metaForeignKeys.filter { fk -> fk.fromEntity == it.value }.isEmpty() }
+        if (filter.size != 1) {
+            error("not found root entity, without ForeignKey on it")
+        }
+        val root = filter.entries.toList()[0].value
+
+        return Dependency(
+            modelClassName = root,
+            collectInnerDependency(root, root),
+            parent = null
+        )
+    }
+
+    private fun collectInnerDependency(parentModelClassName: MetaEntity, root: MetaEntity): Set<Tree> {
+        val filter = metaForeignKeys
+            .filter { it.toEntity.modelClassName == parentModelClassName.modelClassName }
+        val map1 = filter
+            .map {
+                val collectInnerDependency = collectInnerDependency(it.fromEntity, root)
+                Dependency(modelClassName = it.fromEntity, children = collectInnerDependency, parent = parentModelClassName)
+//                collectInnerDependency
+            }
+        val map = map1
+            .toSet()
+
         return map
     }
 
 
-    private fun collectInnerDependency(rootModelClassName: MetaEntity): Tree {
-        val map = collectMetaForeignKeyTemporary
-            .filter { it.toEntity.modelClassName == rootModelClassName.modelClassName }
-            .map { collectInnerDependency(it.fromEntity) }
-            .toSet()
-        return Dependency(rootModelClassName, map)
-    }
 }
 
-sealed interface Tree
+sealed interface Tree {
+    val children: Set<Tree>
+    val parent: MetaEntity?
+    fun isRoot() = parent == null
+    fun haveChildren() = children.isNotEmpty()
+}
 
 data class Dependency(
     val modelClassName: MetaEntity,
-
-    val children: Set<Tree>
+    override val children: Set<Tree>,
+    override val parent: MetaEntity?
 ) : Tree {
-    val haveChildren = children.isNotEmpty()
+
+
 }
 
 private inline fun <reified E> Set<E>.equalsAnyOrder(set: Set<E>): Boolean {

@@ -24,7 +24,7 @@ class EntityDataClassesGenerator(
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-        val foreignKeyMap = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+        val foreignKeyMap = generatedClassData.metaForeignKeys.groupBy { it.toEntity }
         val map = metaEntitySet
             .map { metaEntity ->
 
