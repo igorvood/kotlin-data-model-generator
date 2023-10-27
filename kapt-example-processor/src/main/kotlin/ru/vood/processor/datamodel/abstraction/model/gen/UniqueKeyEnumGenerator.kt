@@ -1,8 +1,10 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
 import ru.vood.dmgen.intf.IMetaColumnEntity
+import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.dmgen.intf.IMetaUkEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
+import ru.vood.processor.datamodel.abstraction.model.gen.EntityEnumGenerator.Companion.nameClassEntityEnumGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
@@ -35,7 +37,10 @@ class UniqueKeyEnumGenerator(
                                         .sorted()
                                         .joinToString(",")
 
-                                ukDto.name.value + "(setOf($ukCols))"
+                                """${ukDto.name.value}(
+                                    |setOf($ukCols),
+                                    |${packageName.value}.${nameClassEntityEnumGenerator}.${metaEnt.shortName}
+                                    |)""".trimMargin()
 
                             }
                     }
@@ -49,7 +54,8 @@ class UniqueKeyEnumGenerator(
 import ${packageName.value}.${ColumnEntityEnumGenerator.columnEntityEnumGeneratorNameClass}.*
 
 enum class $nameClass(
-    override val columns: Set<${IMetaColumnEntity::class.java.canonicalName}>
+    override val columns: Set<${IMetaColumnEntity::class.java.canonicalName}>,
+    override val entity : ${IMetaEntity::class.java.canonicalName}
 ): ${IMetaUkEntity::class.java.canonicalName}{
 $entities
 }

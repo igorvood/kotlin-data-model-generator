@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.dmgen.intf.IMetaFkEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
@@ -31,11 +32,17 @@ class DependencyGenerator(
                         
 import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*
 import ${packageName.value}.${ForeignKeyEnumGenerator.foreignKeyEnumGeneratorNameClass}.*
+import ${FlowEntityType::class.java.canonicalName}.*
 
 
 object Dependency {
 
     val entityDependency : Map<${IMetaEntity::class.java.canonicalName}, Set<MetaDependency>> = collectDependency(${EntityEnumGenerator.nameClassEntityEnumGenerator}.values().toList(), ${ForeignKeyEnumGenerator.foreignKeyEnumGeneratorNameClass}.values().toList())
+
+    val entityDependencyAggregateOnly = entityDependency
+        .filter { qw -> qw.key.entityType == AGGREGATE }
+        .map { it.key to it.value.filter { q -> q.toEntity.entityType == AGGREGATE }.toSet() }
+        .toMap()
 
 
     private fun collectDependency(
