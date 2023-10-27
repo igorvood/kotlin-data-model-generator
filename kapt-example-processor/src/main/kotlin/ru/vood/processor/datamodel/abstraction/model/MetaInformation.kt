@@ -7,6 +7,7 @@ data class MetaInformation(
 ) {
 
     fun aggregateInnerDep(): Tree {
+
         val filter =
             entities.filter { metaForeignKeys.filter { fk -> fk.fromEntity == it.value }.isEmpty() }
         if (filter.size != 1) {
@@ -27,7 +28,11 @@ data class MetaInformation(
         val map1 = filter
             .map {
                 val collectInnerDependency = collectInnerDependency(it.fromEntity, root)
-                Dependency(modelClassName = it.fromEntity, children = collectInnerDependency, parent = parentModelClassName)
+                Dependency(
+                    modelClassName = it.fromEntity,
+                    children = collectInnerDependency,
+                    parent = parentModelClassName
+                )
 //                collectInnerDependency
             }
         val map = map1
