@@ -21,7 +21,7 @@ abstract class AbstractGenerator<META>(
             .forEach { genFile ->
                 val (fileName, code) = genFile
 
-                val createDirectories = Files.createDirectories(Paths.get(generationDirectory))
+                Files.createDirectories(Paths.get(generationDirectory))
 
                 val file = File(generationDirectory, "${fileName.value}.kt")
                 file.writeText(code.value)

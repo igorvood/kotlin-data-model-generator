@@ -118,7 +118,7 @@ $fk
             .map { entry ->
                 val metaForeignKey = entry.key
 
-                when (val relation = entry.value) {
+                when (entry.value) {
                     Relation.MANDATORY -> genField(metaForeignKey.toEntity, "", metaForeignKey.relationType)
                     Relation.OPTIONAL ->
                         if (metaForeignKeysToEntityMandatory.keys.filter { q -> q.toEntity == metaForeignKey.fromEntity }

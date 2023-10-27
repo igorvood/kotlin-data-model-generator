@@ -131,20 +131,20 @@ fun collectMetaForeignKey(
 
 fun RoundEnvironment.metaInformation(): MetaInformation {
     val elementsAnnotatedWithFlowEntity = this.getElementsAnnotatedWith(FlowEntity::class.java)
-
     val entities: Map<ModelClassName, MetaEntity> =
         collectMetaEntity(elementsAnnotatedWithFlowEntity).map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
 
     checkDublicateUk(entities)
     checkDublicateClassName(entities)
+
     val fks = entities.map { it.value }
         .flatMap { qw ->
             qw.foreignKeysAnnotations.map { fk -> fk to ModelClassName(qw.kotlinMetaClass.toString()) }
         }
 
     val collectMetaForeignKey = collectMetaForeignKey(fks, entities)
-    checkDublicateFKName(collectMetaForeignKey)
 
+    checkDublicateFKName(collectMetaForeignKey)
 
     val fieldsFk = fieldsFk(collectMetaForeignKey)
     val metaInformation = MetaInformation(fieldsFk, entities)
@@ -203,18 +203,15 @@ private fun fieldsFk(
                 .map { metaFk -> metaFk.fromEntity to metaFk }
         }
         .flatMap { entry ->
-            val toMetaEntity = entry.first
             val fromEntities = entry.second
             val map = fromEntities
                 .map { fromEnt ->
                     val fromMetaEntity = fromEnt.first
                     val metaForeignKeyTemporary = fromEnt.second
-                    val metaForeignKeyTemporaryName = metaForeignKeyTemporary.name.value
                     val fromEntityFkCols = metaForeignKeyTemporary.fkCols.map { qq -> qq.from.name }.toSet()
                     val fromEntityUKsCols = fromMetaEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
                     val uksOneTOne = fromEntityUKsCols
                         .filter { ukCols -> ukCols.equalsAnyOrder(fromEntityFkCols) }
-
 
                     val relationType = if (uksOneTOne.size == 1) {
                         val metaForeignKeyMayBeCircle =
@@ -253,22 +250,15 @@ private fun fieldsFk(
 
                     }
                     MetaForeignKey(metaForeignKeyTemporary, relationType)
-//                    fromMetaEntity to relationType
                 }
 
-
-//            toMetaEntity to map
             map
         }
         .toSet()
-//        .toMap()
-
-
-    val minus = collectMetaForeignKeyTemporary.map { it.name }.minus(map1.map { it.name })
+    val minus = collectMetaForeignKeyTemporary.map { it.name }.minus(map1.map { it.name }.toSet())
     assert(minus.isEmpty()) { " Почему то не все обработаны $minus" }
 
     return map1
-
 
 }
 
