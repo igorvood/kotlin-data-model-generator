@@ -16,6 +16,8 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
 
     val name: String by lazy { element.asType().toString().split(".").last() }
 
+    val entityFileldName = name[0].lowercaseChar() + name.substring(1)
+
     abstract fun elementToIGeneratedField(posicion: Int, e: Element): FIELD_META
 
     val fields: List<FIELD_META> by lazy {

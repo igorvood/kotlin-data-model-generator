@@ -14,7 +14,7 @@ data class MetaEntity(val element: Element) : AbstractAnnotatedClass<MetaEntityC
     override fun elementToIGeneratedField(posicion: Int, e: Element): MetaEntityColumn =
         MetaEntityColumn(posicion, e)
 
-    val flowEntity = element.necessaryAnnotation<FlowEntity>().entityType
+    val flowEntityType = element.necessaryAnnotation<FlowEntity>().entityType
 
     val comment: String? = element.annotation<Comment>().map { it.comment }.orElse(null)
 

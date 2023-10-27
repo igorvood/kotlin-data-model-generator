@@ -1,6 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 
 import ru.vood.dmgen.annotation.FlowEntityType
+import ru.vood.dmgen.annotation.RelationType
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
@@ -52,7 +53,7 @@ val ${col.name.value}: $kotlinMetaClass$nullableSymbol""".trimIndent()
 
                 val fullClassName = """${dataClass}Entity"""
                 val code = """package ${packageName.value}
-import arrow.optics.*                    
+//import arrow.optics.*                    
                     
 ${
                     metaEntity.comment?.let {
@@ -63,7 +64,7 @@ ${
                     } ?: ""
                 }                    
 @kotlinx.serialization.Serializable
-@optics([OpticsTarget.LENS])
+//@optics([OpticsTarget.LENS])
 data class $fullClassName (
 $joinToString,
 
@@ -72,7 +73,7 @@ $fk
 {
     override fun ktSerializer() = serializer()
     
-    companion object
+//    companion object
 }
                     
                 """.trimIndent()
@@ -87,48 +88,95 @@ $fk
         return map
     }
 
+    enum class Relation {
+        MANDATORY,
+        OPTIONAL
+    }
 
     private fun foreignKeyProcessor(
         toMetaEntity: MetaEntity,
         metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKey>>
     ): String {
-        val metaForeignKeysToEntity = metaForeignKeysTemporary[toMetaEntity]
-        return if (metaForeignKeysToEntity != null && metaForeignKeysToEntity.isNotEmpty()) {
-            metaForeignKeysToEntity
-                .filter { q -> q.fromEntity.flowEntity == FlowEntityType.INNER }
-                .map { foreignKey ->
-                    val fromEntity = foreignKey.fromEntity
-                    val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
-                    val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
-                    val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
-                        ukCols.equalsAnyOrder(fromEntityFkCols)
-                    }
-                    val relationType = if (uksOneTOne.size == 1) {
-                        val metaForeignKeyMayBeCircle =
-                            metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
-                                ?.isNotEmpty()
-                                ?: false
+        val metaForeignKeysToEntityOptionalTemp = metaForeignKeysTemporary[toMetaEntity]
+
+        val metaForeignKeysToEntityOptional =
+            metaForeignKeysTemporary[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER }?.associate { it to Relation.OPTIONAL }
+            ?: mapOf()
+        val metaForeignKeysToEntityMandatory =
+            metaForeignKeysTemporary.values
+                .flatMap { lfk -> lfk.filter { fk -> fk.fromEntity == toMetaEntity } }
+                .map { it to Relation.MANDATORY }
+                .toMap()
+
+        val plus = metaForeignKeysToEntityMandatory.plus(metaForeignKeysToEntityOptional)
+
+        val joinToString = plus.entries
+            .map { entry ->
+                val metaForeignKey = entry.key
+
+                when (val relation = entry.value) {
+                    Relation.MANDATORY -> genField(metaForeignKey.toEntity, "", metaForeignKey.relationType)
+                    Relation.OPTIONAL ->
+                        if (metaForeignKeysToEntityMandatory.keys.filter { q -> q.toEntity == metaForeignKey.fromEntity }
+                                .isEmpty()) {
+                            genField(metaForeignKey.fromEntity, "?", metaForeignKey.relationType)
+                        } else {
+                            ""
+                        }
+                }
+            }
+            .filter { it != "" }
+            .joinToString(",\n")
 
 
-                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
-                        val s = if (isOneToOneOptional) {
-                            "?"
-                        } else ""
-                        "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
-                    } else {
-                        ""
-                    }
-
-                    relationType
-                }.filter { ass -> ass.isNotEmpty() }
-                .joinToString(",\n")
-
-
-        } else {
-            ""
-        }
+//        val s1 = if (metaForeignKeysToEntityOptionalTemp != null && metaForeignKeysToEntityOptionalTemp.isNotEmpty()) {
+//
+//
+//            metaForeignKeysToEntityOptionalTemp
+//                .filter { q -> q.fromEntity.flowEntity == FlowEntityType.INNER }
+//                .map { foreignKey ->
+//                    val fromEntity = foreignKey.fromEntity
+//                    val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
+//                    val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
+//                    val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
+//                        ukCols.equalsAnyOrder(fromEntityFkCols)
+//                    }
+//                    val relationType = if (uksOneTOne.size == 1) {
+//                        val metaForeignKeyMayBeCircle =
+//                            metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
+//                                ?.isNotEmpty()
+//                                ?: false
+//
+//
+//                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
+//                        val s = if (isOneToOneOptional) {
+//                            "?"
+//                        } else ""
+//                        "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
+//                    } else {
+//                        ""
+//                    }
+//
+//                    relationType
+//                }.filter { ass -> ass.isNotEmpty() }
+//                .joinToString(",\n")
+//
+//
+//        } else {
+//            ""
+//        }
+        return joinToString
 
     }
+
+    private fun genField(toEntity: MetaEntity, question: String, relationType: RelationType) =
+        when(relationType){
+            RelationType.ONE_TO_ONE_MANDATORY, RelationType.ONE_TO_ONE_OPTIONAL -> "val ${toEntity.entityFileldName} : ${packageName.value}.${toEntity.name}Entity$question"
+            RelationType.MANY_TO_ONE -> "val ${toEntity.entityFileldName} : Set<${packageName.value}.${toEntity.name}Entity>"
+            RelationType.UNNOWN -> error("Не известный тип")
+        }
+
+
 
     override val subPackage: PackageName
         get() = entityDataClassesGeneratorPackageName

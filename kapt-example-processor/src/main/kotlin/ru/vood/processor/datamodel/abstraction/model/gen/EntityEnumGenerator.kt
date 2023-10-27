@@ -35,7 +35,7 @@ class EntityEnumGenerator(
                         |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity.serializer(),
                         |${EntityName::class.java.canonicalName}("${it.shortName}"), 
                         |"${it.comment}",
-                        |${it.flowEntity}
+                        |${it.flowEntityType}
                         |)""".trimMargin()
                     }
                     .sorted()
