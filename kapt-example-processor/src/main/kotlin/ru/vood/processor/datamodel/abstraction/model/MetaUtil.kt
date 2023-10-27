@@ -194,7 +194,7 @@ fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
         .map { entry ->
             entry.key to entry.value
                 .filter { a -> a.fromEntity.flowEntity == FlowEntityType.INNER }
-                .map { metaFk -> metaFk.fromEntity to metaFk.fkCols }
+                .map { metaFk -> metaFk.fromEntity to metaFk }
         }
         .map { entry ->
             val toMetaEntity = entry.first
@@ -202,7 +202,8 @@ fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
             val map = fromEntities
                 .map { fromEnt ->
                     val fromMetaEntity = fromEnt.first
-                    val fromEntityFkCols = fromEnt.second.map { qq -> qq.from.name }.toSet()
+                    val metaForeignKeyTemporary = fromEnt.second
+                    val fromEntityFkCols = metaForeignKeyTemporary.fkCols.map { qq -> qq.from.name }.toSet()
                     val fromEntityUKsCols = fromMetaEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
                     val uksOneTOne = fromEntityUKsCols
                         .filter { ukCols -> ukCols.equalsAnyOrder(fromEntityFkCols) }
