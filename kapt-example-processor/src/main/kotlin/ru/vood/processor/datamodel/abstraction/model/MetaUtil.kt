@@ -6,30 +6,24 @@ import ru.vood.dmgen.annotation.RelationType
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
-fun collectMetaEntity(
+tailrec fun collectMetaEntity(
     elementsAnnotatedWith: Set<Element>,
     collector: Map<Element, MetaEntity> = mapOf()
 ): Map<Element, MetaEntity> {
-
-
-    val map = when (elementsAnnotatedWith.isEmpty()) {
+    return when (elementsAnnotatedWith.isEmpty()) {
         true -> collector
         false -> {
             val head = elementsAnnotatedWith.first()
             val tailElementsAnnotatedWith = elementsAnnotatedWith.drop(1).toSet()
-            if (collector.contains(head)) {
-                collectMetaEntity(tailElementsAnnotatedWith, collector)
-            } else {
-
-                val plus = collector.plus(head to MetaEntity(head))
-                collectMetaEntity(tailElementsAnnotatedWith, plus)
+            when (collector.contains(head)) {
+                true -> collectMetaEntity(tailElementsAnnotatedWith, collector)
+                false -> {
+                    val plus = collector.plus(head to MetaEntity(head))
+                    collectMetaEntity(tailElementsAnnotatedWith, plus)
+                }
             }
         }
-
     }
-
-
-    return map
 }
 
 fun metaEntityColumns(
@@ -138,11 +132,8 @@ fun collectMetaForeignKey(
 fun RoundEnvironment.metaInformation(): MetaInformation {
     val elementsAnnotatedWithFlowEntity = this.getElementsAnnotatedWith(FlowEntity::class.java)
 
-    val allMeta: Map<Element, MetaEntity> = collectMetaEntity(elementsAnnotatedWithFlowEntity)
-
-
     val entities: Map<ModelClassName, MetaEntity> =
-        allMeta.map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
+        collectMetaEntity(elementsAnnotatedWithFlowEntity).map { ModelClassName(it.value.kotlinMetaClass.toString()) to it.value }.toMap()
 
     val map = entities.flatMap { it.value.uniqueKeysFields.entries.map { w -> w.key.name to it.key } }
         .groupBy { it.first.value }
@@ -265,7 +256,7 @@ fun fieldsFk(
 
 
     val minus = collectMetaForeignKeyTemporary.map { it.name }.minus(map1.map { it.name })
-    assert(minus.isEmpty()){" Почему то не все обработаны $minus"}
+    assert(minus.isEmpty()) { " Почему то не все обработаны $minus" }
 
     return map1
 
