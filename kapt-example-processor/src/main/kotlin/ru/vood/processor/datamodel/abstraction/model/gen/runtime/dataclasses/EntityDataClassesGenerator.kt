@@ -3,7 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
-import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
+import ru.vood.processor.datamodel.abstraction.model.MetaForeignKeyTemporary
 import ru.vood.processor.datamodel.abstraction.model.MetaInformation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -22,7 +22,7 @@ class EntityDataClassesGenerator(
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-        val foreignKeyMap: Map<MetaEntity, List<MetaForeignKey>> = generatedClassData.collectMetaForeignKey.groupBy { it.toEntity }
+        val foreignKeyMap: Map<MetaEntity, List<MetaForeignKeyTemporary>> = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
         val map = metaEntitySet
             .map { metaEntity ->
 
@@ -88,8 +88,8 @@ $fk
     }
 
 
-    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeys: Map<MetaEntity, List<MetaForeignKey>>): String {
-        val metaForeignKeysToEntity = metaForeignKeys[toMetaEntity]
+    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>>): String {
+        val metaForeignKeysToEntity = metaForeignKeysTemporary[toMetaEntity]
         return if (metaForeignKeysToEntity != null && metaForeignKeysToEntity.isNotEmpty()) {
             metaForeignKeysToEntity
                 .filter { q-> q.fromEntity.flowEntity== FlowEntityType.INNER }
@@ -101,7 +101,7 @@ $fk
                     ukCols.equalsAnyOrder(fromEntityFkCols)
                 }
                 val relationType = if (uksOneTOne.size==1) {
-                    val metaForeignKeyMayBeCircle = metaForeignKeys[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
+                    val metaForeignKeyMayBeCircle = metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
                         ?.isNotEmpty()
                         ?:false
 

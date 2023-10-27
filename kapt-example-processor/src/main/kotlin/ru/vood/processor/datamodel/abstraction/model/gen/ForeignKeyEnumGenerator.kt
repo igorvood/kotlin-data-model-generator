@@ -3,7 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.dmgen.intf.IMetaFkEntity
 import ru.vood.dmgen.intf.IMetaUkEntity
-import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
+import ru.vood.processor.datamodel.abstraction.model.MetaForeignKeyTemporary
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
@@ -18,12 +18,12 @@ class ForeignKeyEnumGenerator(
     processingEnv: ProcessingEnvironment,
     rootPackage: PackageName
 
-) : AbstractDataDictionaryGenerator<Set<MetaForeignKey>>(messager, processingEnv, rootPackage) {
+) : AbstractDataDictionaryGenerator<Set<MetaForeignKeyTemporary>>(messager, processingEnv, rootPackage) {
 
     override val nameClass: String
         get() = foreignKeyEnumGeneratorNameClass
 
-    override fun textGenerator(generatedClassData: Set<MetaForeignKey>): Set<GeneratedFile> {
+    override fun textGenerator(generatedClassData: Set<MetaForeignKeyTemporary>): Set<GeneratedFile> {
         return when (generatedClassData.isEmpty()) {
             true -> setOf()
             false -> {

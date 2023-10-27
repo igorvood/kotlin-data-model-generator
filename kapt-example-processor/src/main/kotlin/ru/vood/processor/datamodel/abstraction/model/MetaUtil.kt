@@ -51,8 +51,8 @@ fun metaEntityColumns(
 fun collectMetaForeignKey(
     elementsAnnotatedWith: List<Pair<ForeignKey, ModelClassName>>,
     entities: Map<ModelClassName, MetaEntity>,
-    collector: Set<MetaForeignKey> = setOf()
-): Set<MetaForeignKey> {
+    collector: Set<MetaForeignKeyTemporary> = setOf()
+): Set<MetaForeignKeyTemporary> {
 
     val map = when (elementsAnnotatedWith.isEmpty()) {
         true -> collector
@@ -120,7 +120,7 @@ fun collectMetaForeignKey(
 
 
             val element =
-                MetaForeignKey(
+                MetaForeignKeyTemporary(
                     ForeignKeyName(foreignKey.name), entities[fromMetaEntityClassName]!!, foreignMetaEntity, fkCols,
                     ukDto
                 )
@@ -187,10 +187,10 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     return MetaInformation(collectMetaForeignKey, entities)
 }
 
-fun fieldsFk(collectMetaForeignKey: Set<MetaForeignKey>,
+fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
              entities: Map<ModelClassName, MetaEntity>) {
-    val metaForeignKeys: Map<MetaEntity, List<MetaForeignKey>> = collectMetaForeignKey.groupBy { it.toEntity }
-    val map1 = metaForeignKeys.entries
+    val metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>> = collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+    val map1 = metaForeignKeysTemporary.entries
         .map { entry ->
             entry.key to entry.value
                 .filter { a -> a.fromEntity.flowEntity == FlowEntityType.INNER }
@@ -208,17 +208,17 @@ fun fieldsFk(collectMetaForeignKey: Set<MetaForeignKey>,
                         .filter { ukCols -> ukCols.equalsAnyOrder(fromEntityFkCols) }
 
 
-                    val relationType: String = if (uksOneTOne.size == 1) {
+                    val relationType = if (uksOneTOne.size == 1) {
                         val metaForeignKeyMayBeCircle =
-                            metaForeignKeys[fromMetaEntity]?.map { it.toEntity }?.filter { it == fromMetaEntity }
+                            metaForeignKeysTemporary[fromMetaEntity]?.map { it.toEntity }?.filter { it == fromMetaEntity }
                                 ?.isNotEmpty()
                                 ?: false
 
 
                         val isOneToOneOptional = !metaForeignKeyMayBeCircle
                         val s = if (isOneToOneOptional) {
-                            "isOneToOneOptional"// to listOf()
-                        } else "OneToOne"
+                            RelationType.ONE_TO_ONE_OPTIONAL
+                        } else RelationType.ONE_TO_ONE_MANDATORY
                         s
                     } else {
                         val uksOneToMany = fromEntityUKsCols
@@ -229,8 +229,9 @@ fun fieldsFk(collectMetaForeignKey: Set<MetaForeignKey>,
                             val elements = uksOneToMany.first()
                             val fromEntityUKsCols1 = fromEntityFkCols
                             val minus = fromEntityUKsCols1.minus(elements)
-                            "uksOneToMany" //   to minus
-                        }else{"" //to listOf()
+                            RelationType.ONE_TO_MANY
+                        }else{
+                            TODO()
                         }
 
                     }

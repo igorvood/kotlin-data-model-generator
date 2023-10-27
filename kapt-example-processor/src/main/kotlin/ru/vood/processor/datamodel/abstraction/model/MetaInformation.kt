@@ -1,9 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model
 
-import ru.vood.dmgen.annotation.FlowEntityType
-
 data class MetaInformation(
-    val collectMetaForeignKey: Set<MetaForeignKey>,
+    val collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
     val entities: Map<ModelClassName, MetaEntity>
 ) {
 

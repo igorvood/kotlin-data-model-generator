@@ -62,7 +62,7 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
                 messager,
                 processingEnv,
                 rootPackage
-            ).createFiles(metaInformation.collectMetaForeignKey)
+            ).createFiles(metaInformation.collectMetaForeignKeyTemporary)
 
             ContextDataClassesGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
             EntityDataClassesGenerator(messager, processingEnv, rootPackage).createFiles(metaInformation)
