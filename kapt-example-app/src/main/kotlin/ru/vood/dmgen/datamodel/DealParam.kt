@@ -32,6 +32,18 @@ data class DealParamOneToOneOptional(
 
 @FlowEntity
 @ForeignKey(
+    kClass = "ru.vood.dmgen.datamodel.DealParamOneToOneOptional",
+    "DealParamOneToOneOptional_FK",
+    cols = [ForeignKeyColumns("dealId", "dealId")]
+)
+data class ParamOnParam(
+    @Pk
+    val dealId: Int,
+    val againParam: String
+)
+
+@FlowEntity
+@ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
     "DealParamSet_Deal_FK",
     cols = [ForeignKeyColumns("dealId", "id")]

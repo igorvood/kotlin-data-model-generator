@@ -9,17 +9,8 @@ import ru.vood.dmgen.annotation.*
     "Deal_2_DealParamOneToOne_FK",
     cols = [ForeignKeyColumns("id", "dealId")]
 )
-
-//@Uk(["paramsList"])
 abstract class Deal(
     @Pk
     @Comment("Это ее идентификатор")
     val id: Int,
-
-
-//    val paramsSet: DealParam,
-//    val paramsList: List<DealParam>
-) {
-
-
-}
+)
