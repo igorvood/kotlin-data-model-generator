@@ -24,12 +24,13 @@ class EntityDataClassesGenerator(
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-        val foreignKeyMap = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+        val foreignKeyMapTo = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+        val foreignKeyMapFrom = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.fromEntity }
         val map = metaEntitySet
             .map { metaEntity ->
 
 
-                val fk: String = foreignKeyProcessor(metaEntity, foreignKeyMap)
+                val fk: String = foreignKeyProcessor(metaEntity, foreignKeyMapTo, foreignKeyMapFrom)
 
                 val dataClass = metaEntity.name
 
@@ -101,18 +102,32 @@ $fk
 
     private fun foreignKeyProcessor(
         toMetaEntity: MetaEntity,
-        metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKey>>
+        metaForeignKeysToEntity: Map<MetaEntity, List<MetaForeignKey>>,
+        foreignKeyMapFrom: Map<MetaEntity, List<MetaForeignKey>>
     ): String {
         val metaForeignKeysToEntityOptional =
-            metaForeignKeysTemporary[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER }?.associate { it to Relation.OPTIONAL }
+            metaForeignKeysToEntity[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER }?.associate { currentFk ->
+                currentFk to  Relation.OPTIONAL
+            }
             ?: mapOf()
-        val metaForeignKeysToEntityMandatory =
-            metaForeignKeysTemporary.values
+
+        val flatten = metaForeignKeysToEntity.values.flatten()
+        val map = flatten.map { it to it.fromEntity to it.toEntity }
+
+
+        val metaForeignKeysToEntityMandatoryButNoCreateField =
+            metaForeignKeysToEntity.values
                 .flatMap { lfk -> lfk.filter { fk -> fk.fromEntity == toMetaEntity } }
                 .map { it to Relation.MANDATORY }
                 .toMap()
 
-        val plus = metaForeignKeysToEntityMandatory.plus(metaForeignKeysToEntityOptional)
+        val filter =
+            metaForeignKeysToEntityMandatoryButNoCreateField.entries.filter { it.key.toEntity == toMetaEntity }
+                .associate { it.key to it.value }
+
+
+        val plus = metaForeignKeysToEntityOptional.plus(filter)
+        //metaForeignKeysToEntityMandatory.plus(metaForeignKeysToEntityOptional)
 
         val joinToString = plus.entries
             .map { entry ->
@@ -121,7 +136,7 @@ $fk
                 when (val relation = entry.value) {
                     Relation.MANDATORY -> genField(metaForeignKey.toEntity, "", metaForeignKey.relationType)
                     Relation.OPTIONAL ->
-                        if (metaForeignKeysToEntityMandatory.keys.filter { q -> q.toEntity == metaForeignKey.fromEntity }
+                        if (metaForeignKeysToEntityMandatoryButNoCreateField.keys.filter { q -> q.toEntity == metaForeignKey.fromEntity }
                                 .isEmpty()) {
                             genField(metaForeignKey.fromEntity, "?", metaForeignKey.relationType)
                         } else {
