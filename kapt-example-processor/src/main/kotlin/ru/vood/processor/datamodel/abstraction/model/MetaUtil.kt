@@ -3,6 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model
 import ru.vood.dmgen.annotation.FlowEntity
 import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.annotation.ForeignKey
+import ru.vood.dmgen.annotation.RelationType
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 
@@ -196,7 +197,7 @@ fun fieldsFk(
     val map1 = metaForeignKeysTemporary.entries
         .map { entry ->
             entry.key to entry.value
-                .filter { a -> a.fromEntity.flowEntity == FlowEntityType.INNER }
+//                .filter { a -> a.fromEntity.flowEntity == FlowEntityType.INNER }
                 .map { metaFk -> metaFk.fromEntity to metaFk }
         }
         .flatMap { entry ->
@@ -250,6 +251,10 @@ fun fieldsFk(
         }
         .toSet()
 //        .toMap()
+
+
+    val minus = collectMetaForeignKeyTemporary.map { it.name }.minus(map1.map { it.name })
+    assert(minus.isEmpty()){" Почему то не все обработаны $minus"}
 
     return map1
 

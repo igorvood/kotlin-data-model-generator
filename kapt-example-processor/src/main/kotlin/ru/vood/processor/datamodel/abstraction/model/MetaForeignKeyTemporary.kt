@@ -1,5 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model
 
+import ru.vood.dmgen.annotation.RelationType
+
 data class MetaForeignKeyTemporary(
     val name: ForeignKeyName,
     val fromEntity: MetaEntity,
@@ -32,12 +34,3 @@ data class MetaForeignKey(
 
 @JvmInline
 value class ForeignKeyName(val value: String)
-
-enum class RelationType(val mandatory: Boolean) {
-    ONE_TO_MANY(true),
-    UNNOWN(true),
-    ONE_TO_ONE_MANDATORY(true),
-    ONE_TO_ONE_OPTIONAL(false);
-
-
-}

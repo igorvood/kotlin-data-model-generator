@@ -1,5 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
+import ru.vood.dmgen.annotation.RelationType
 import ru.vood.dmgen.intf.IMetaEntity
 import ru.vood.dmgen.intf.IMetaFkEntity
 import ru.vood.dmgen.intf.IMetaUkEntity
@@ -31,7 +32,12 @@ class ForeignKeyEnumGenerator(
                     .map { metaForeign ->
 
 
-                        metaForeign.name.value + "(${metaForeign.fromEntity.shortName}, ${metaForeign.toEntity.shortName}, ${metaForeign.uk.name.value})"
+                        """${metaForeign.name.value}(
+                            |${metaForeign.fromEntity.shortName}, 
+                            |${metaForeign.toEntity.shortName}, 
+                            |${metaForeign.uk.name.value},
+                            |${RelationType::class.java.canonicalName}.${metaForeign.relationType.name},
+                            |)""".trimMargin()
                     }
                     .sorted()
                     .joinToString(",\n")
@@ -45,7 +51,8 @@ import ${packageName.value}.${UniqueKeyEnumGenerator.uniqueKeyEnumGeneratorNameC
 enum class $nameClass(
     override val fromEntity: ${IMetaEntity::class.java.canonicalName},
     override val toEntity: ${IMetaEntity::class.java.canonicalName},
-    override val uk: ${IMetaUkEntity::class.java.canonicalName}
+    override val uk: ${IMetaUkEntity::class.java.canonicalName},
+    override val relationType: ${RelationType::class.java.canonicalName}
 ): ${IMetaFkEntity::class.java.canonicalName} {
 $entities
 }
