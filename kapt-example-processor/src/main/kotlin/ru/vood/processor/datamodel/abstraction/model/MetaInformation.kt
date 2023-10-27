@@ -1,7 +1,7 @@
 package ru.vood.processor.datamodel.abstraction.model
 
 data class MetaInformation(
-    val collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
+    val collectMetaForeignKeyTemporary: Set<MetaForeignKey>,
     val entities: Map<ModelClassName, MetaEntity>
 ) {
 

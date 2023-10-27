@@ -183,20 +183,23 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
     if (dublicatetdFkName.isNotEmpty()) {
         error(dublicatetdFkName)
     }
-    fieldsFk(collectMetaForeignKey, entities)
-    return MetaInformation(collectMetaForeignKey, entities)
+    val fieldsFk = fieldsFk(collectMetaForeignKey, entities)
+    return MetaInformation(fieldsFk, entities)
 }
 
-fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
-             entities: Map<ModelClassName, MetaEntity>) {
-    val metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>> = collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+fun fieldsFk(
+    collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
+    entities: Map<ModelClassName, MetaEntity>
+): Set<MetaForeignKey> {
+    val metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>> =
+        collectMetaForeignKeyTemporary.groupBy { it.toEntity }
     val map1 = metaForeignKeysTemporary.entries
         .map { entry ->
             entry.key to entry.value
                 .filter { a -> a.fromEntity.flowEntity == FlowEntityType.INNER }
                 .map { metaFk -> metaFk.fromEntity to metaFk }
         }
-        .map { entry ->
+        .flatMap { entry ->
             val toMetaEntity = entry.first
             val fromEntities = entry.second
             val map = fromEntities
@@ -211,7 +214,8 @@ fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
 
                     val relationType = if (uksOneTOne.size == 1) {
                         val metaForeignKeyMayBeCircle =
-                            metaForeignKeysTemporary[fromMetaEntity]?.map { it.toEntity }?.filter { it == fromMetaEntity }
+                            metaForeignKeysTemporary[fromMetaEntity]?.map { it.toEntity }
+                                ?.filter { it == fromMetaEntity }
                                 ?.isNotEmpty()
                                 ?: false
 
@@ -226,30 +230,30 @@ fun fieldsFk(collectMetaForeignKeyTemporary: Set<MetaForeignKeyTemporary>,
                             .filter { ukCols ->
                                 !ukCols.equalsAnyOrder(fromEntityFkCols) && fromEntityUKsCols.minus(ukCols).isEmpty()
                             }
-                        if (uksOneToMany.size==1){
+                        if (uksOneToMany.size == 1) {
                             val elements = uksOneToMany.first()
                             val fromEntityUKsCols1 = fromEntityFkCols
                             val minus = fromEntityUKsCols1.minus(elements)
                             RelationType.ONE_TO_MANY
-                        }else{
-                            TODO()
+                        } else {
+                            RelationType.UNNOWN
                         }
 
                     }
-
-                    fromMetaEntity to relationType
+                    MetaForeignKey(metaForeignKeyTemporary, relationType)
+//                    fromMetaEntity to relationType
                 }
 
 
-
-            toMetaEntity to map
+//            toMetaEntity to map
+            map
         }
-        .toMap()
+        .toSet()
+//        .toMap()
+
+    return map1
 
 
-
-
-//        TODO("Not yet implemented")
 }
 
 private inline fun <reified E> Set<E>.equalsAnyOrder(set: Set<E>): Boolean {

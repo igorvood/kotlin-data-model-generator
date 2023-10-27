@@ -12,11 +12,11 @@ class Demo1123Application
 
 fun main(args: Array<String>) {
     println(DataDictionaryEntityEnum.DealParamOneToOne)
-    println(DataDictionaryForeignKeyEnum.Product_FK_1)
+    println(DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_deal_FK)
     println(DataDictionaryUniqueKeyEnum.DealParamOneToOne_PK)
     println(DataDictionaryColumnEntityEnum.DealParamOneToOne_dealId)
-    println("============================")
-//
+//    println("============================")
+////
     Dependency.entityDependency.entries.forEach { println(it) }
     runApplication<Demo1123Application>(*args)
 }

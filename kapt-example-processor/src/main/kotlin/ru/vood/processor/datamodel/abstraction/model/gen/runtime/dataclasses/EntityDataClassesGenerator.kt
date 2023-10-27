@@ -3,7 +3,7 @@ package ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses
 import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
-import ru.vood.processor.datamodel.abstraction.model.MetaForeignKeyTemporary
+import ru.vood.processor.datamodel.abstraction.model.MetaForeignKey
 import ru.vood.processor.datamodel.abstraction.model.MetaInformation
 import ru.vood.processor.datamodel.abstraction.model.abstraction.metadto.AbstractGenerator
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
@@ -22,7 +22,7 @@ class EntityDataClassesGenerator(
 
     override fun textGenerator(generatedClassData: MetaInformation): Set<GeneratedFile> {
         val metaEntitySet = generatedClassData.entities.map { it.value }.toSet()
-        val foreignKeyMap: Map<MetaEntity, List<MetaForeignKeyTemporary>> = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
+        val foreignKeyMap = generatedClassData.collectMetaForeignKeyTemporary.groupBy { it.toEntity }
         val map = metaEntitySet
             .map { metaEntity ->
 
@@ -88,39 +88,45 @@ $fk
     }
 
 
-    private fun foreignKeyProcessor(toMetaEntity: MetaEntity, metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKeyTemporary>>): String {
+    private fun foreignKeyProcessor(
+        toMetaEntity: MetaEntity,
+        metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKey>>
+    ): String {
         val metaForeignKeysToEntity = metaForeignKeysTemporary[toMetaEntity]
         return if (metaForeignKeysToEntity != null && metaForeignKeysToEntity.isNotEmpty()) {
             metaForeignKeysToEntity
-                .filter { q-> q.fromEntity.flowEntity== FlowEntityType.INNER }
+                .filter { q -> q.fromEntity.flowEntity == FlowEntityType.INNER }
                 .map { foreignKey ->
-                val fromEntity = foreignKey.fromEntity
-                val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
-                val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
-                val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
-                    ukCols.equalsAnyOrder(fromEntityFkCols)
-                }
-                val relationType = if (uksOneTOne.size==1) {
-                    val metaForeignKeyMayBeCircle = metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
-                        ?.isNotEmpty()
-                        ?:false
+                    val fromEntity = foreignKey.fromEntity
+                    val fromEntityFkCols = foreignKey.fkCols.map { it.from.name }.toSet()
+                    val fromEntityUKsCols = fromEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
+                    val uksOneTOne = fromEntityUKsCols.filter { ukCols ->
+                        ukCols.equalsAnyOrder(fromEntityFkCols)
+                    }
+                    val relationType = if (uksOneTOne.size == 1) {
+                        val metaForeignKeyMayBeCircle =
+                            metaForeignKeysTemporary[fromEntity]?.map { it.toEntity }?.filter { it == fromEntity }
+                                ?.isNotEmpty()
+                                ?: false
 
 
-                    val isOneToOneOptional = !metaForeignKeyMayBeCircle
-                    val s = if (isOneToOneOptional) {
-                        "?"
-                    } else ""
-                    "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
-                } else {
-                    ""
-                }
+                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
+                        val s = if (isOneToOneOptional) {
+                            "?"
+                        } else ""
+                        "val ${fromEntity.name} : ${packageName.value}.${fromEntity.name}Entity$s"
+                    } else {
+                        ""
+                    }
 
                     relationType
-            }.filter { ass->ass.isNotEmpty() }
+                }.filter { ass -> ass.isNotEmpty() }
                 .joinToString(",\n")
 
 
-        }else{""}
+        } else {
+            ""
+        }
 
     }
 
