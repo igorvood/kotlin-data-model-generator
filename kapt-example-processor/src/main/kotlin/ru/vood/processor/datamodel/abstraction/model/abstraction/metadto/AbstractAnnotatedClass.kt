@@ -2,6 +2,7 @@ package ru.vood.processor.datamodel.abstraction.model.abstraction.metadto
 
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.asTypeName
+import ru.vood.processor.datamodel.abstraction.model.ModelClassName
 
 import javax.lang.model.element.Element
 
@@ -13,6 +14,8 @@ abstract class AbstractAnnotatedClass<FIELD_META : AbstractField>(
         is ClassName -> t
         else -> error("unsupported class $t")
     }
+
+    val modelClassName = ModelClassName(kotlinMetaClass.toString())
 
     val name: String by lazy { element.asType().toString().split(".").last() }
 

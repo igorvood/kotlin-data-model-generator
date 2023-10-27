@@ -184,7 +184,10 @@ fun RoundEnvironment.metaInformation(): MetaInformation {
         error(dublicatetdFkName)
     }
     val fieldsFk = fieldsFk(collectMetaForeignKey, entities)
-    return MetaInformation(fieldsFk, entities)
+    val metaInformation = MetaInformation(fieldsFk, entities)
+    val message = metaInformation.aggregateInnerDep()
+    println(message)
+    return metaInformation
 }
 
 fun fieldsFk(
