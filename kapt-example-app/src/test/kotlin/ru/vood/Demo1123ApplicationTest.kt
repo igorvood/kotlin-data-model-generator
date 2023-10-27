@@ -15,11 +15,11 @@ internal class Demo1123ApplicationTest {
                 DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_Deal_FK -> RelationType.ONE_TO_ONE_OPTIONAL
                 DataDictionaryForeignKeyEnum.DealParamOneToOne_Deal_FK -> RelationType.ONE_TO_ONE_MANDATORY
                 DataDictionaryForeignKeyEnum.Deal_2_DealParamOneToOne_FK -> RelationType.ONE_TO_ONE_MANDATORY
+                DataDictionaryForeignKeyEnum.DealParamSet_Deal_FK -> RelationType.MANY_TO_ONE
 
-                DataDictionaryForeignKeyEnum.DealParamSet_Deal_FK -> RelationType.UNNOWN
-                DataDictionaryForeignKeyEnum.ProductPayments_FK_1 -> RelationType.UNNOWN
-                DataDictionaryForeignKeyEnum.Product_FK_1 -> RelationType.UNNOWN
-                DataDictionaryForeignKeyEnum.ProductPayments_FK_2 -> RelationType.UNNOWN
+                DataDictionaryForeignKeyEnum.ProductPayments_FK_1 -> RelationType.MANY_TO_ONE
+                DataDictionaryForeignKeyEnum.Product_FK_1 -> RelationType.MANY_TO_ONE
+                DataDictionaryForeignKeyEnum.ProductPayments_FK_2 -> RelationType.MANY_TO_ONE
 
             }
 

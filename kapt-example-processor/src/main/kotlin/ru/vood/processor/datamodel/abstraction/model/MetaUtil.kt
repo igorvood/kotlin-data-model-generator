@@ -1,7 +1,6 @@
 package ru.vood.processor.datamodel.abstraction.model
 
 import ru.vood.dmgen.annotation.FlowEntity
-import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.annotation.ForeignKey
 import ru.vood.dmgen.annotation.RelationType
 import javax.annotation.processing.RoundEnvironment
@@ -207,6 +206,7 @@ fun fieldsFk(
                 .map { fromEnt ->
                     val fromMetaEntity = fromEnt.first
                     val metaForeignKeyTemporary = fromEnt.second
+                    val metaForeignKeyTemporaryName = metaForeignKeyTemporary.name.value
                     val fromEntityFkCols = metaForeignKeyTemporary.fkCols.map { qq -> qq.from.name }.toSet()
                     val fromEntityUKsCols = fromMetaEntity.uniqueKeysFields.keys.map { aas -> aas.cols }
                     val uksOneTOne = fromEntityUKsCols
@@ -227,15 +227,23 @@ fun fieldsFk(
                         } else RelationType.ONE_TO_ONE_MANDATORY
                         s
                     } else {
+                        val fkCols = metaForeignKeyTemporary.fkCols.map { it.from.name }
+
+
                         val uksOneToMany = fromEntityUKsCols
                             .filter { ukCols ->
-                                !ukCols.equalsAnyOrder(fromEntityFkCols) && fromEntityUKsCols.minus(ukCols).isEmpty()
+                                val minus = fkCols.minus(ukCols)
+                                val minus1 = ukCols.minus(fkCols)
+                                val notEmpty = minus.isEmpty()
+                                val empty = minus1.isNotEmpty()
+                                notEmpty && empty
+//                                !ukCols.equalsAnyOrder(fromEntityFkCols) && fromEntityUKsCols.minus(ukCols).isEmpty()
                             }
-                        if (uksOneToMany.size == 1) {
+                        if (uksOneToMany.isNotEmpty()) {
                             val elements = uksOneToMany.first()
                             val fromEntityUKsCols1 = fromEntityFkCols
                             val minus = fromEntityUKsCols1.minus(elements)
-                            RelationType.ONE_TO_MANY
+                            RelationType.MANY_TO_ONE
                         } else {
                             RelationType.UNNOWN
                         }
