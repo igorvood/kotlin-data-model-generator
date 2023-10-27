@@ -12,7 +12,7 @@ class Demo1123Application
 
 fun main(args: Array<String>) {
     println(DataDictionaryEntityEnum.DealParamOneToOne)
-    println(DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_deal_FK)
+    println(DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_Deal_FK)
     println(DataDictionaryUniqueKeyEnum.DealParamOneToOne_PK)
     println(DataDictionaryColumnEntityEnum.DealParamOneToOne_dealId)
 //    println("============================")

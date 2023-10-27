@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 @FlowEntity
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
-    "DealParamOneToOne_deal_FK",
+    "DealParamOneToOne_Deal_FK",
     cols = [ForeignKeyColumns("dealId", "id")]
 )
 data class DealParamOneToOne(
@@ -21,7 +21,7 @@ data class DealParamOneToOne(
 @FlowEntity
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
-    "DealParamOneToOneOptional_deal_FK",
+    "DealParamOneToOneOptional_Deal_FK",
     cols = [ForeignKeyColumns("dealId", "id")]
 )
 data class DealParamOneToOneOptional(
@@ -33,7 +33,7 @@ data class DealParamOneToOneOptional(
 @FlowEntity
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
-    "DealParamSet_deal_FK",
+    "DealParamSet_Deal_FK",
     cols = [ForeignKeyColumns("dealId", "id")]
 )
 data class DealParamSet(

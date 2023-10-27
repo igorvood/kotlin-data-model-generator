@@ -12,11 +12,11 @@ internal class Demo1123ApplicationTest {
         Assertions.assertEquals(7, DataDictionaryForeignKeyEnum.values().size)
         DataDictionaryForeignKeyEnum.values().forEach {
             val relationType = when (it) {
-                DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_deal_FK -> RelationType.ONE_TO_ONE_OPTIONAL
-                DataDictionaryForeignKeyEnum.DealParamOneToOne_deal_FK -> RelationType.ONE_TO_ONE_MANDATORY
+                DataDictionaryForeignKeyEnum.DealParamOneToOneOptional_Deal_FK -> RelationType.ONE_TO_ONE_OPTIONAL
+                DataDictionaryForeignKeyEnum.DealParamOneToOne_Deal_FK -> RelationType.ONE_TO_ONE_MANDATORY
                 DataDictionaryForeignKeyEnum.Deal_2_DealParamOneToOne_FK -> RelationType.ONE_TO_ONE_MANDATORY
 
-                DataDictionaryForeignKeyEnum.DealParamSet_deal_FK -> RelationType.UNNOWN
+                DataDictionaryForeignKeyEnum.DealParamSet_Deal_FK -> RelationType.UNNOWN
                 DataDictionaryForeignKeyEnum.ProductPayments_FK_1 -> RelationType.UNNOWN
                 DataDictionaryForeignKeyEnum.Product_FK_1 -> RelationType.UNNOWN
                 DataDictionaryForeignKeyEnum.ProductPayments_FK_2 -> RelationType.UNNOWN
