@@ -121,8 +121,7 @@ $fk
                 when (entry.value) {
                     Relation.MANDATORY -> genField(metaForeignKey.toEntity, "", metaForeignKey.relationType)
                     Relation.OPTIONAL ->
-                        if (metaForeignKeysToEntityMandatory.keys.filter { q -> q.toEntity == metaForeignKey.fromEntity }
-                                .isEmpty()) {
+                        if (metaForeignKeysToEntityMandatory.keys.none { q -> q.toEntity == metaForeignKey.fromEntity }) {
                             genField(metaForeignKey.fromEntity, "?", metaForeignKey.relationType)
                         } else {
                             ""

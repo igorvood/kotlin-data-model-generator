@@ -240,9 +240,6 @@ private fun fieldsFk(
 //                                !ukCols.equalsAnyOrder(fromEntityFkCols) && fromEntityUKsCols.minus(ukCols).isEmpty()
                             }
                         if (uksOneToMany.isNotEmpty()) {
-                            val elements = uksOneToMany.first()
-                            val fromEntityUKsCols1 = fromEntityFkCols
-                            val minus = fromEntityUKsCols1.minus(elements)
                             RelationType.MANY_TO_ONE
                         } else {
                             RelationType.UNNOWN
