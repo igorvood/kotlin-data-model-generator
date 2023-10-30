@@ -1,11 +1,14 @@
 package ru.vood.dmgen.annotation
 
-@Target( AnnotationTarget.CLASS)
+@Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 annotation class FlowEntity(
-    val entityType: FlowEntityType = FlowEntityType.INNER,
+    val entityType: FlowEntityType = FlowEntityType.INNER_OPTIONAL,
 )
-enum class FlowEntityType{
-    INNER, AGGREGATE
+
+enum class FlowEntityType(val isOptionalDouble: Boolean) {
+    INNER_OPTIONAL(true),
+    INNER_MANDATORY(false),
+    AGGREGATE(true)
 }

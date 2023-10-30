@@ -55,7 +55,7 @@ val ${col.name.value}: $kotlinMetaClass$nullableSymbol""".trimIndent()
                 val fullClassName = """${dataClass}Entity"""
                 val s = when (metaEntity.flowEntityType){
                     FlowEntityType.AGGREGATE -> """${IAggregate::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}"""
-                    FlowEntityType.INNER -> """${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}"""
+                    FlowEntityType.INNER_OPTIONAL, FlowEntityType.INNER_MANDATORY -> """${IEntity::class.java.canonicalName}<$fullClassName>//, ${metaEntity.kotlinMetaClass.toString()}"""
                 }
 
                 val code = """package ${packageName.value}
@@ -104,7 +104,7 @@ $fk
         metaForeignKeysTemporary: Map<MetaEntity, List<MetaForeignKey>>
     ): String {
         val metaForeignKeysToEntityOptional =
-            metaForeignKeysTemporary[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER }?.associate { it to Relation.OPTIONAL }
+            metaForeignKeysTemporary[toMetaEntity]?.filter { fk->fk.fromEntity.flowEntityType == FlowEntityType.INNER_OPTIONAL }?.associate { it to Relation.OPTIONAL }
             ?: mapOf()
         val metaForeignKeysToEntityMandatory =
             metaForeignKeysTemporary.values
