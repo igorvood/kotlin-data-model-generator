@@ -11,7 +11,7 @@ import ru.vood.processor.datamodel.abstraction.model.abstraction.necessaryAnnota
 import javax.lang.model.element.Element
 
 data class MetaEntity(val element: Element,
-                      var node: Tree =None
+
 ) : AbstractAnnotatedClass<MetaEntityColumn>(element) {
     override fun elementToIGeneratedField(posicion: Int, e: Element): MetaEntityColumn =
         MetaEntityColumn(posicion, e)

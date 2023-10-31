@@ -214,18 +214,18 @@ private fun fieldsFk(
                         .filter { ukCols -> ukCols.equalsAnyOrder(fromEntityFkCols) }
 
                     val relationType = if (uksOneTOne.size == 1) {
-                        val metaForeignKeyMayBeCircle =
-                            metaForeignKeysTemporary[fromMetaEntity]?.map { it.toEntity }
-                                ?.filter { it == fromMetaEntity }
-                                ?.isNotEmpty()
-                                ?: false
+//                        val metaForeignKeyMayBeCircle =
+//                            metaForeignKeysTemporary[fromMetaEntity]?.map { it.toEntity }
+//                                ?.filter { it == fromMetaEntity }
+//                                ?.isNotEmpty()
+//                                ?: false
 
 
-                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
-                        val s = if (isOneToOneOptional) {
-                            RelationType.ONE_TO_ONE_OPTIONAL
-                        } else RelationType.ONE_TO_ONE_MANDATORY
-                        s
+//                        val isOneToOneOptional = !metaForeignKeyMayBeCircle
+//                        val s = if (isOneToOneOptional) {
+//                            RelationType.ONE_TO_ONE_OPTIONAL
+//                        } else RelationType.ONE_TO_ONE_MANDATORY
+                        RelationType.ONE_TO_ONE_OPTIONAL
                     } else {
                         val fkCols = metaForeignKeyTemporary.fkCols.map { it.from.name }
 

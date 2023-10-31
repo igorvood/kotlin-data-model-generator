@@ -1,12 +1,9 @@
 package ru.vood.dmgen.datamodel
 
-import ru.vood.dmgen.annotation.FlowEntity
-import ru.vood.dmgen.annotation.ForeignKey
-import ru.vood.dmgen.annotation.ForeignKeyColumns
-import ru.vood.dmgen.annotation.Pk
+import ru.vood.dmgen.annotation.*
 import java.time.LocalDateTime
 
-@FlowEntity
+@FlowEntity(FlowEntityType.INNER_MANDATORY)
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
     "DealParamOneToOne_Deal_FK",
@@ -30,7 +27,7 @@ data class DealParamOneToOneOptional(
     val paramDate: String
 )
 
-@FlowEntity
+@FlowEntity//(FlowEntityType.INNER_MANDATORY)
 @ForeignKey(
     kClass = "ru.vood.dmgen.datamodel.Deal",
     "DealParamSet_Deal_FK",
