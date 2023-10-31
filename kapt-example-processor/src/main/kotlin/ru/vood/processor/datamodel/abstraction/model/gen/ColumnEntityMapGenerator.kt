@@ -1,18 +1,19 @@
 package ru.vood.processor.datamodel.abstraction.model.gen
 
 import ru.vood.dmgen.intf.ColumnName
-import ru.vood.dmgen.intf.IMetaColumnEntity
-import ru.vood.dmgen.intf.IMetaEntity
+import ru.vood.dmgen.intf.EntityName
+import ru.vood.dmgen.intf.newIntf.ColumnEntityData
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedFile
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.PackageName
+import ru.vood.processor.datamodel.abstraction.model.gen.runtime.dataclasses.EntityDataClassesGenerator.Companion.entityDataClassesGeneratorPackageName
 import javax.annotation.processing.Messager
 import javax.annotation.processing.ProcessingEnvironment
 import javax.tools.Diagnostic
 
-class ColumnEntityEnumGenerator(
+class ColumnEntityMapGenerator(
     messager: Messager,
     processingEnv: ProcessingEnvironment,
     rootPackage: PackageName
@@ -27,15 +28,24 @@ class ColumnEntityEnumGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .flatMap { ent -> ent.fields
-                        .map { f->
-                            """${ent.shortName}_${f.name.value}(
-                                |${ent.shortName},
-                                |${ent.kotlinMetaClass.canonicalName}::${f.name.value},
-                                |${ColumnName::class.java.canonicalName}("${f.name}"),
+                    .flatMap { ent ->
+                        ent.fields
+                            .map { f ->
+                                """${ColumnName::class.java.canonicalName}("${ent.shortName}_${f.name.value}") to ColumnEntityData(
+                                |    ${EntityName::class.java.canonicalName}( "${ent.shortName}"),
+                                |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${ent.kotlinMetaClass.simpleName}Entity::${f.name.value},
+                                |${ColumnName::class.java.canonicalName}("${f.name.value}"),
                                 |"${f.comment}"
                                 |)""".trimMargin()
-                        }
+
+
+//                            """${ent.shortName}_${f.name.value}(
+//                                |${ent.shortName},
+//                                |${ent.kotlinMetaClass.canonicalName}::${f.name.value},
+//                                |${ColumnName::class.java.canonicalName}("${ent.shortName}"),
+//                                |"${f.comment}"
+//                                |)""".trimMargin()
+                            }
                     }
                     .sorted()
                     .joinToString(",\n")
@@ -43,17 +53,16 @@ class ColumnEntityEnumGenerator(
                 val trimIndent =
                     """package ${packageName.value}
                         
-import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*                        
+import ${packageName.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.*
+import ${ColumnEntityData::class.java.canonicalName}
 import kotlin.reflect.KProperty1
 
-enum class $nameClass(
-    override val entity: ${IMetaEntity::class.java.canonicalName},
-    override val kProperty1: KProperty1<*, *>,
-    override val columnName: ${ColumnName::class.java.canonicalName},
-    override val comment: String,
-): ${IMetaColumnEntity::class.java.canonicalName} {
+
+val columnEntityDataMap = mapOf(
 $entities
-}
+
+)
+
 """
                 log(Diagnostic.Kind.NOTE, "Create $nameClass")
                 setOf(GeneratedFile(FileName("$nameClass"), GeneratedCode(trimIndent)))
@@ -63,8 +72,8 @@ $entities
 
     }
 
-    companion object{
-        val columnEntityEnumGeneratorNameClass = "DataDictionaryColumnEntityEnum"
+    companion object {
+        val columnEntityEnumGeneratorNameClass = "DataDictionaryColumnEntityMap"
     }
 }
 

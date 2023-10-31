@@ -4,6 +4,7 @@ import ru.vood.dmgen.annotation.FlowEntityType
 import ru.vood.dmgen.intf.EntityName
 import ru.vood.dmgen.intf.IEntity
 import ru.vood.dmgen.intf.IMetaEntity
+import ru.vood.dmgen.intf.newIntf.EntityData
 import ru.vood.processor.datamodel.abstraction.model.MetaEntity
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.FileName
 import ru.vood.processor.datamodel.abstraction.model.gen.dto.GeneratedCode
@@ -30,13 +31,17 @@ class EntityMapGenerator(
             true -> setOf()
             false -> {
                 val entities = generatedClassData
-                    .map { """${it.shortName}(${it.kotlinMetaClass.canonicalName}::class, 
-                        |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity::class,
-                        |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity.serializer(),
-                        |${EntityName::class.java.canonicalName}("${it.shortName}"), 
-                        |"${it.comment}",
-                        |${it.flowEntityType}
-                        |)""".trimMargin()
+
+                    .map {
+
+                        """${EntityName::class.java.canonicalName}("${it.shortName}") to EntityData(
+                            |${it.kotlinMetaClass.canonicalName}::class, 
+                            |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity::class,
+                            |${rootPackage.value}${entityDataClassesGeneratorPackageName.value}.${it.kotlinMetaClass.simpleName}Entity.serializer(),
+                            |${EntityName::class.java.canonicalName}("${it.shortName}"), 
+                            |"${it.comment}",
+                            |${it.flowEntityType}
+                            |)""".trimMargin()
                     }
                     .sorted()
                     .joinToString(",\n")
@@ -47,22 +52,16 @@ import kotlin.reflect.KClass
 import kotlinx.serialization.KSerializer
 import ${FlowEntityType::class.java.canonicalName}.*
 import ${FlowEntityType::class.java.canonicalName}
+import ${EntityData::class.java.canonicalName}
+
+val entityDataMap = mapOf(
+$entities
+
+)
 
 
-enum class $nameClass(
-override val designClass: KClass<out Any>,
-override val runtimeClass: KClass<out ${IEntity::class.java.canonicalName}<*>>,
-override val serializer: KSerializer<out ${IEntity::class.java.canonicalName}<*>>,
-override val entityName: ${EntityName::class.java.canonicalName},
-override val comment: String,
-override val entityType: FlowEntityType
 
-): ${IMetaEntity::class.java.canonicalName} {
-$entities;
 
-@Suppress("UNCHECKED_CAST")
-inline fun <reified T> entitySerializer(): KSerializer<T> = this.serializer as KSerializer<T> 
-}
 """
                 log(Diagnostic.Kind.NOTE, "Create $nameClass")
                 setOf(GeneratedFile(FileName("$nameClass"), GeneratedCode(trimIndent)))
@@ -72,7 +71,7 @@ inline fun <reified T> entitySerializer(): KSerializer<T> = this.serializer as K
 
     }
 
-    companion object{
+    companion object {
         val nameClassEntityEnumGenerator = "DataDictionaryEntityMap"
     }
 
