@@ -47,8 +47,8 @@ class ContextDataClassesGenerator(
 @kotlinx.serialization.Serializable
 data class $fullClassName (
 $joinToString
-): ${IContextOf::class.java.canonicalName}<${rootPackage.value}${EntityDataClassesGenerator.entityDataClassesGeneratorPackageName.value}.$entityName>,
-${IEntity::class.java.canonicalName}<$fullClassName>
+): ${IContextOf::class.java.canonicalName}<${rootPackage.value}${EntityDataClassesGenerator.entityDataClassesGeneratorPackageName.value}.$entityName>//,
+//${IEntity::class.java.canonicalName}<$fullClassName>
 {
 override val metaEntity: ${IMetaEntity::class.java.canonicalName}
         get() = ${rootPackage.value}${AbstractDataDictionaryGenerator.subPackageAbstractDataDictionaryGenerator.value}.${EntityEnumGenerator.nameClassEntityEnumGenerator}.$dataClass
