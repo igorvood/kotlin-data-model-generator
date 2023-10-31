@@ -55,6 +55,7 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
         if (setMetaEnt.isNotEmpty()) {
             val rootPackage = PackageName(commonPackage(setMetaEnt))
             EntityEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            EntityMapGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
             DependencyGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
 
             ColumnEntityEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
