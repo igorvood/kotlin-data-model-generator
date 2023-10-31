@@ -4,7 +4,7 @@ import kotlinx.serialization.KSerializer
 
 
 
-interface Serializer<T>{
+interface Serializer<out T>{
 
     fun ktSerializer() : KSerializer<out T>
 }
