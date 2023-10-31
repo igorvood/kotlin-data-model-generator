@@ -61,6 +61,7 @@ class MetaDataKtAnnotationProcessor : AbstractCommonGenerationProcessor() {
             ColumnEntityEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
             ColumnEntityMapGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
             UniqueKeyEnumGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
+            UniqueKeyMapGenerator(messager, processingEnv, rootPackage).createFiles(setMetaEnt)
             ForeignKeyEnumGenerator(
                 messager,
                 processingEnv,
